@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using UnityEngine;
@@ -16,7 +17,7 @@ namespace GridMap
     /// 一応下のGenericMapクラスがメインですが、IConvertibleを継承していないクラスで配列を作りたい場合こちらを使用してください。
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class UnConvertibleGenericMap<T>
+    public class UnConvertibleGenericMap<T> : IEnumerable<T>
     {
         /// <summary>
         /// 2次元配列のLength
@@ -79,6 +80,14 @@ namespace GridMap
             Debug.LogError("Augments have different ranges");
             return false;
         }
+
+        // IEnumerableの制約で実装
+        public IEnumerator<T> GetEnumerator()
+        {
+            for (int i = 0; i < Range.x * Range.y; i++)
+                yield return this[i % Range.x, i / Range.x];
+        }
+        IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
     }
     
     /// <summary>
@@ -126,6 +135,25 @@ namespace GridMap
             var r = Expression.Parameter(typeof(T), "r");
             var expression = Expression.Lambda<Func<T, T, T>>(op(l, r), l, r);
             return expression.Compile();
+        }
+
+        // 以降おまけ
+        /// <summary>
+        /// 内積計算
+        /// </summary>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
+        /// <returns></returns>
+        public static GenericMap<T> Dot(GenericMap<T> left, GenericMap<T> right)
+        {
+            var result = new GenericMap<T>(new Vector2Int(right.Range.x, left.Range.y));
+            if (left.Range.x != right.Range.y) return result;
+            result.MatrixOperate((x1, y1) =>
+            {
+                for (int i = 0; i < left.Range.x; i++)
+                    result[x1, y1] = Operator(Expression.Add)(result[x1, y1], Operator(Expression.Multiply)(left[i, y1], right[x1, i]));
+            });
+            return result;
         }
     }
 }
