@@ -17,7 +17,7 @@ namespace GridMap
     /// 一応下のGenericMapクラスがメインですが、IConvertibleを継承していないクラスで配列を作りたい場合こちらを使用してください。
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class UnConvertibleGenericMap<T> : IEnumerable<T>
+    public class UnConvertibleMap<T> : IEnumerable<T>
     {
         /// <summary>
         /// 2次元配列のLength
@@ -34,17 +34,17 @@ namespace GridMap
         /// </summary>
         /// <param name="x"></param>
         /// <param name="y"></param>
-        public delegate T ValueOfInitializeMap(int x, int y);
+        public delegate T Initializer(int x, int y);
 
         // コンストラクタ2種
-        public UnConvertibleGenericMap(Vector2Int range, ValueOfInitializeMap function = null)
+        public UnConvertibleMap(Vector2Int range, Initializer function = null)
         {
             Range = range;
             Matrix = new T[range.x, range.y];
             if (function == null) return;
             MatrixOperate((x, y) => Matrix[x,y] = function(x,y));
         }
-        public UnConvertibleGenericMap(T[,] matrix)
+        public UnConvertibleMap(T[,] matrix)
         {
             Range = new Vector2Int(matrix.GetLength(0), matrix.GetLength(1));
             Matrix = new T[Range.x, Range.y];
@@ -74,7 +74,7 @@ namespace GridMap
         public void MatrixOperate(MOFunctionByVector function) => MatrixOperate((x,y)=>function(new Vector2Int(x,y)));
         
         // 2つのマップのサイズがあってるか確認する
-        protected bool RangeCheck(UnConvertibleGenericMap<T> right)
+        protected bool RangeCheck(UnConvertibleMap<T> right)
         {
             if (this.Range == right.Range) return true;
             Debug.LogError("Augments have different ranges");
@@ -94,28 +94,28 @@ namespace GridMap
     /// タイルマップに特化した2次元配列管理クラス
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class GenericMap<T> : UnConvertibleGenericMap<T> where T:IConvertible
+    public class Map<T> : UnConvertibleMap<T> where T:IConvertible
     {
         // コンストラクタ2種
-        public GenericMap(Vector2Int range, ValueOfInitializeMap function = null) : base(range, function){}
-        public GenericMap(T[,] matrix) : base(matrix){}
+        public Map(Vector2Int range, Initializer function = null) : base(range, function){}
+        public Map(T[,] matrix) : base(matrix){}
 
         // 演算子オーバーロード
-        public static implicit operator GenericMap<float>(GenericMap<T> map)=>new GenericMap<float>(map.Range, (x,y)=>(float)Convert.ToDouble(map[x,y]));
-        public static implicit operator GenericMap<double>(GenericMap<T> map)=>new GenericMap<double>(map.Range, (x,y)=>Convert.ToDouble(map[x,y]));
-        public static implicit operator GenericMap<decimal>(GenericMap<T> map)=>new GenericMap<decimal>(map.Range, (x,y)=>Convert.ToDecimal(map[x,y]));
-        public static explicit operator GenericMap<int>(GenericMap<T> map)=>new GenericMap<int>(map.Range, (x,y)=>Convert.ToInt32(map[x,y]));
-        public static explicit operator GenericMap<long>(GenericMap<T> map)=>new GenericMap<long>(map.Range, (x,y)=>Convert.ToInt64(map[x,y]));
-        public static GenericMap<T> operator +(GenericMap<T> l, GenericMap<T> r) => l.RangeCheck(r) ? new GenericMap<T>(l.Range, (x,y) => Operator(Expression.Add)(l[x,y], r[x,y])) : new GenericMap<T>(l.Range);
-        public static GenericMap<T> operator -(GenericMap<T> l, GenericMap<T> r) => l.RangeCheck(r) ? new GenericMap<T>(l.Range, (x,y) => Operator(Expression.Subtract)(l[x,y], r[x,y])) : new GenericMap<T>(l.Range);
-        public static GenericMap<T> operator *(GenericMap<T> l, GenericMap<T> r) => l.RangeCheck(r) ? new GenericMap<T>(l.Range, (x,y) => Operator(Expression.Multiply)(l[x,y], r[x,y])) : new GenericMap<T>(l.Range);
-        public static GenericMap<T> operator /(GenericMap<T> l, GenericMap<T> r) => l.RangeCheck(r) ? new GenericMap<T>(l.Range, (x,y) => Operator(Expression.Divide)(l[x,y], r[x,y])) : new GenericMap<T>(l.Range);
-        public static GenericMap<T> operator %(GenericMap<T> l, GenericMap<T> r) => l.RangeCheck(r) ? new GenericMap<T>(l.Range, (x,y) => Operator(Expression.Modulo)(l[x,y], r[x,y])) : new GenericMap<T>(l.Range);
-        public static GenericMap<T> operator +(GenericMap<T> l, T r) => new GenericMap<T>(l.Range, (x,y)=>Operator(Expression.Add)(l[x,y], r));
-        public static GenericMap<T> operator -(GenericMap<T> l, T r) => new GenericMap<T>(l.Range, (x,y)=>Operator(Expression.Subtract)(l[x,y], r));
-        public static GenericMap<T> operator *(GenericMap<T> l, T r) => new GenericMap<T>(l.Range, (x,y)=>Operator(Expression.Multiply)(l[x,y], r));
-        public static GenericMap<T> operator /(GenericMap<T> l, T r) => new GenericMap<T>(l.Range, (x,y)=>Operator(Expression.Divide)(l[x,y], r));
-        public static GenericMap<T> operator %(GenericMap<T> l, T r) => new GenericMap<T>(l.Range, (x,y)=>Operator(Expression.Modulo)(l[x,y], r));
+        public static implicit operator Map<float>(Map<T> map)=>new Map<float>(map.Range, (x,y)=>(float)Convert.ToDouble(map[x,y]));
+        public static implicit operator Map<double>(Map<T> map)=>new Map<double>(map.Range, (x,y)=>Convert.ToDouble(map[x,y]));
+        public static implicit operator Map<decimal>(Map<T> map)=>new Map<decimal>(map.Range, (x,y)=>Convert.ToDecimal(map[x,y]));
+        public static explicit operator Map<int>(Map<T> map)=>new Map<int>(map.Range, (x,y)=>Convert.ToInt32(map[x,y]));
+        public static explicit operator Map<long>(Map<T> map)=>new Map<long>(map.Range, (x,y)=>Convert.ToInt64(map[x,y]));
+        public static Map<T> operator +(Map<T> l, Map<T> r) => l.RangeCheck(r) ? new Map<T>(l.Range, (x,y) => Operator(Expression.Add)(l[x,y], r[x,y])) : new Map<T>(l.Range);
+        public static Map<T> operator -(Map<T> l, Map<T> r) => l.RangeCheck(r) ? new Map<T>(l.Range, (x,y) => Operator(Expression.Subtract)(l[x,y], r[x,y])) : new Map<T>(l.Range);
+        public static Map<T> operator *(Map<T> l, Map<T> r) => l.RangeCheck(r) ? new Map<T>(l.Range, (x,y) => Operator(Expression.Multiply)(l[x,y], r[x,y])) : new Map<T>(l.Range);
+        public static Map<T> operator /(Map<T> l, Map<T> r) => l.RangeCheck(r) ? new Map<T>(l.Range, (x,y) => Operator(Expression.Divide)(l[x,y], r[x,y])) : new Map<T>(l.Range);
+        public static Map<T> operator %(Map<T> l, Map<T> r) => l.RangeCheck(r) ? new Map<T>(l.Range, (x,y) => Operator(Expression.Modulo)(l[x,y], r[x,y])) : new Map<T>(l.Range);
+        public static Map<T> operator +(Map<T> l, T r) => new Map<T>(l.Range, (x,y)=>Operator(Expression.Add)(l[x,y], r));
+        public static Map<T> operator -(Map<T> l, T r) => new Map<T>(l.Range, (x,y)=>Operator(Expression.Subtract)(l[x,y], r));
+        public static Map<T> operator *(Map<T> l, T r) => new Map<T>(l.Range, (x,y)=>Operator(Expression.Multiply)(l[x,y], r));
+        public static Map<T> operator /(Map<T> l, T r) => new Map<T>(l.Range, (x,y)=>Operator(Expression.Divide)(l[x,y], r));
+        public static Map<T> operator %(Map<T> l, T r) => new Map<T>(l.Range, (x,y)=>Operator(Expression.Modulo)(l[x,y], r));
         
         // 一度使用された演算子のデリゲートが格納される
         private static readonly Dictionary<Binary, Func<T, T, T>> OpDictionary = new Dictionary<Binary, Func<T, T, T>>();
@@ -144,9 +144,9 @@ namespace GridMap
         /// <param name="left"></param>
         /// <param name="right"></param>
         /// <returns></returns>
-        public static GenericMap<T> Dot(GenericMap<T> left, GenericMap<T> right)
+        public static Map<T> Dot(Map<T> left, Map<T> right)
         {
-            var result = new GenericMap<T>(new Vector2Int(right.Range.x, left.Range.y));
+            var result = new Map<T>(new Vector2Int(right.Range.x, left.Range.y));
             if (left.Range.x != right.Range.y) return result;
             result.MatrixOperate((x1, y1) =>
             {

@@ -29,13 +29,13 @@ public class DungeonGenerator : MonoBehaviour
         var range = new Vector2Int(20, 10);
         var tileMap = _tileMapObject.GetComponent<Tilemap>();
         var a = new UnConvertibleArray<TileBase>(range.x*range.y);
-        var b = new UnConvertibleGenericMap<Vector3Int>(range, (x,y) => new Vector3Int(x,y,0));
+        var b = new UnConvertibleMap<Vector3Int>(range, (x,y) => new Vector3Int(x,y,0));
         var c = new UnConvertibleArray<Vector3Int>(b);
         tileMap.SetTiles(c.Array, a.Array);
 
     }
 
-    public void GenerateFloor(GenericMap<TerrainType> dungeonData)
+    public void GenerateFloor(Map<TerrainType> dungeonData)
     {
         
     }

@@ -54,9 +54,9 @@ namespace GridMap
         /// <param name="basePosition">距離0となる基準の座標</param>
         /// <param name="nextPoint">ある座標から1ステップで移動可能な相対座標を示す</param>
         /// <param name="function">算出された距離に応じた値で行列を生成するための関数</param>
-        public static GenericMap<T> DistanceMap<T>(Vector2Int mapRange, Vector2Int basePosition, NextPoint nextPoint, DistanceMapFunction<T> function) where T : IConvertible
+        public static Map<T> DistanceMap<T>(Vector2Int mapRange, Vector2Int basePosition, NextPoint nextPoint, DistanceMapFunction<T> function) where T : IConvertible
         {
-            var searchMatrix = new GenericMap<int>(mapRange, (x, y) => -1);
+            var searchMatrix = new Map<int>(mapRange, (x, y) => -1);
             Queue<SearchAgent> searchAgent = new Queue<SearchAgent>(){};
             searchAgent.Enqueue(new SearchAgent() { Position = basePosition, Distance = 0 });
             searchMatrix[basePosition] = 0;
@@ -68,7 +68,7 @@ namespace GridMap
                         if (searchMatrix[vector] == -1)
                             searchAgent.Enqueue(new SearchAgent(){Position = vector, Distance = searchMatrix[vector] = current.Distance + 1});
             }
-            return new GenericMap<T>(mapRange, (x,y)=>function(searchMatrix[x,y]));
+            return new Map<T>(mapRange, (x,y)=>function(searchMatrix[x,y]));
         }
         
         /// <summary>
@@ -77,18 +77,18 @@ namespace GridMap
         /// <param name="basePosition">距離0となる基準の座標</param>
         /// <param name="nextPoint">ある座標から1ステップで移動可能な相対座標を示す</param>
         /// <param name="function">算出された距離に応じた値で行列を生成するための関数</param>
-        public static GenericMap<T> DistanceMap<T>(Vector2Int basePosition, NextPoint nextPoint, DistanceMapFunction<T> function) where T : IConvertible =>
+        public static Map<T> DistanceMap<T>(Vector2Int basePosition, NextPoint nextPoint, DistanceMapFunction<T> function) where T : IConvertible =>
             DistanceMap(DefaultRange, basePosition, nextPoint, function);
         
         /// <summary>
         /// judgePositionがマップの範囲内であればtrueを返す。
         /// </summary>
-        /// <param name="genericMap">範囲(Range)をとるマップ</param>
+        /// <param name="map">範囲(Range)をとるマップ</param>
         /// <param name="judgePosition">次判定する座標</param>
         /// <returns>trueなら範囲内、falseならOutOfRange</returns>
-        public static bool WithinMapRange<T>(this GenericMap<T> genericMap, Vector2Int judgePosition) where T:IConvertible =>
-            (judgePosition.x >= 0) && (judgePosition.y >= 0) && (judgePosition.x < genericMap.Range.x) &&
-            (judgePosition.y < genericMap.Range.y);
+        public static bool WithinMapRange<T>(this Map<T> map, Vector2Int judgePosition) where T:IConvertible =>
+            (judgePosition.x >= 0) && (judgePosition.y >= 0) && (judgePosition.x < map.Range.x) &&
+            (judgePosition.y < map.Range.y);
 
         /// <summary>
         /// 経路探索 到達不可能or同じ座標なら空のリストを返す。
