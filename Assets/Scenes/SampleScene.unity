@@ -392,13 +392,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _tileMapObject: {fileID: 1181290524}
-  _terrainTiles:
-  - _type: 0
-    _tile: {fileID: 0}
-  - _type: 0
-    _tile: {fileID: 0}
-  - _type: 0
-    _tile: {fileID: 0}
+  tileData:
+  - type: 0
+    _tile: {fileID: 11400000, guid: a2a3c5e9a19a69946aa95520052512b1, type: 2}
+  - type: 1
+    _tile: {fileID: 11400000, guid: 0cfe42251048dab4283eb94a99b8c590, type: 2}
+  - type: 2
+    _tile: {fileID: 11400000, guid: b35a9ad18c3b56b4aa1f0bf47b9018a9, type: 2}
 --- !u!4 &2087025189
 Transform:
   m_ObjectHideFlags: 0
