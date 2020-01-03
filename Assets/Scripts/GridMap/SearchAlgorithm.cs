@@ -15,6 +15,17 @@ namespace GridMap
     /// </summary>
     public static class SearchAlgorithm
     {
+        public static IEnumerable<Vector2Int> DirectionEight(Vector2Int basePosition)
+        {
+            yield return basePosition + Vector2Int.right;
+            yield return basePosition + Vector2Int.right + Vector2Int.up;
+            yield return basePosition + Vector2Int.up;
+            yield return basePosition + Vector2Int.up + Vector2Int.left;
+            yield return basePosition + Vector2Int.left;
+            yield return basePosition + Vector2Int.left + Vector2Int.down;
+            yield return basePosition + Vector2Int.down;
+            yield return basePosition + Vector2Int.down + Vector2Int.right;
+        } 
         /// <summary>
         /// 探索用関数等で特にマップ範囲を指定しなかった場合この値が適用される。
         /// むやみに変更しないように

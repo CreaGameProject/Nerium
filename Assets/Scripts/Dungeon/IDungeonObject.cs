@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Assets.Scripts.Dungeon
 {
-    interface IDungeonObject
+    public interface IDungeonObject
     {
 
     }

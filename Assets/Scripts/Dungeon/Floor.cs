@@ -9,6 +9,7 @@ using GridMap;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using UnityEngine.WSA;
+using Vector2 = UnityEngine.Vector2;
 
 namespace Assets.Scripts.Dungeon
 {
@@ -33,13 +34,17 @@ namespace Assets.Scripts.Dungeon
 
         }
 
-        public IEnumerable<IDungeonObject> ThrowItem(Item item, Vector2Int from, Vector2Int direction)
+        public bool InRange(Vector2Int position)
         {
-            yield break;
+            if (position.x < -1 || position.x > Range.x) return false;
+            if (position.y < -1 || position.y > Range.y) return false;
+            return true;
         }
 
         private Tilemap tileMap;
         private List<Room> rooms;
+
+        
     
     }
 }
