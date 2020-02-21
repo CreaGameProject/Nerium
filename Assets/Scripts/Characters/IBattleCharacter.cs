@@ -1,24 +1,25 @@
 ﻿using System;
-using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
 
-public enum AttackAttribution
+namespace Assets.Scripts.Characters
 {
-    Shot
-}
+    public enum AttackAttribution
+    {
+        Melee, Shot
+    }
 
-public class TurnAction
-{
-    public IEnumerable<Vector2Int> Moves { get; set; } = new Vector2Int[0];
-    public IEnumerator Behave { get; set; }
-}
+    public interface IBattleCharacter
+    {
+        // int Hp { get; }
+        // int Attack { get; }
+        // int Defense { get; }
+        // Vector2Int Position { get; }
+        int Damage(int attack, AttackAttribution attribution);
 
-public interface IBattleCharacter
-{
-    int GetHp { get; }
-    int GetAttack { get; }
-    int GetDefense { get; }
-    int Damage(int damage, params AttackAttribution[] attributions);
-    TurnAction GetTurnAction { get; }
+        IEnumerator Turn();
+
+        Func<IEnumerator> AbnormalBehave { get; set; }
+    }
 }

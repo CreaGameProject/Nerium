@@ -29,6 +29,11 @@ namespace Assets.Scripts.Dungeon
             this.rooms = rooms.ToList();
         }
 
+        public void ThrowItem(Item item)
+        {
+
+        }
+
         public void PutItem(Item item, Vector2Int position)
         {
 
