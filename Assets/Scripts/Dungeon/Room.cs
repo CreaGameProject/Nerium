@@ -15,23 +15,6 @@ namespace Assets.Scripts.Dungeon
 
     public class Room
     {
-        public Floor Floor { get; }
-        public Vector2Int RectStart { get; }
-        public Vector2Int RectEnd { get; }
 
-        public RoomEffect Effect { get; }
-
-        public Room(Floor floor, Vector2Int rectStart, Vector2Int rectEnd)
-        {
-            Floor = floor;
-            RectStart = rectStart;
-            RectEnd = rectEnd;
-        }
-
-        public Cell this[Vector2Int position]
-        {
-            get => Floor[RectStart + position];
-            set => Floor[RectStart + position] = value;
-        }
     }
 }

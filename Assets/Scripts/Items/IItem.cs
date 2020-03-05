@@ -1,11 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using Assets.Scripts.Characters;
 using UnityEngine;
 
 namespace Assets.Scripts.Items
 {
-    interface IItem
+    public interface IItem
     {
         // アイテム名
         string Name { get; }
@@ -16,10 +15,10 @@ namespace Assets.Scripts.Items
         Vector2Int Position { get; set; }
 
         // 上に乗られたとき
-        IEnumerator SteppedBy(IBattleCharacter character);
+        IEnumerator SteppedBy(BattleCharacter character);
 
         // 投げられたアイテムがキャラクターにあたったとき
-        IEnumerator Hit(IBattleCharacter character);
+        IEnumerator Hit(BattleCharacter character);
 
         // メニュー画面で選択されたときの選択肢リスト
         IEnumerable<string> GetMenuItem();

@@ -2,54 +2,45 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
-using Assets.Scripts.Characters;
+using Assets.Scripts.Items;
 using GridMap;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using UnityEngine.WSA;
+using UnityEngine.XR.WSA.Persistence;
 using Vector2 = UnityEngine.Vector2;
 
 namespace Assets.Scripts.Dungeon
 {
-    public class Cell
+    public class Floor
     {
-        private TerrainType _terrainType;
-        public Cell(TerrainType terrainType) => _terrainType = terrainType;
-        public Character Character { get; set; }
-        public Item Item { get; set; }
-    }
-    
-    public class Floor : UnConvertibleMap<Cell>
-    {
-        public Floor(UnConvertibleMap<TerrainType> terrainTypes, params Room[] rooms) : 
-            base(terrainTypes.Range, (x, y) => new Cell(terrainTypes[x, y]))
-        {
-            this.rooms = rooms.ToList();
-        }
+        private Room[] rooms;
+        private List<IDungeonCharacter> characters;
+        private List<IItem> items;
 
-        public void ThrowItem(Item item)
-        {
+        public Dungeon Dungeon { get; }
 
-        }
+        public int Number { get; }
 
-        public void PutItem(Item item, Vector2Int position)
-        {
+        public int NowTurn { get; }
 
-        }
+        public TerrainType[,] terrains { get; set; }
 
-        public bool InRange(Vector2Int position)
-        {
-            if (position.x < -1 || position.x > Range.x) return false;
-            if (position.y < -1 || position.y > Range.y) return false;
-            return true;
-        }
+        public IEnumerable<Room> Rooms => rooms;
 
-        private Tilemap tileMap;
-        private List<Room> rooms;
+        public IEnumerable<IDungeonCharacter> Characters => characters;
 
-        
-    
+        public IEnumerable<IDungeonCharacter> Enemies => characters.Skip(1);
+
+        public IDungeonCharacter Player => characters.First();
+
+        public Cell this[int x, int y] => this[new Vector2Int(x,y)];
+
+        public Cell this[Vector2Int v] => new Cell(this, v);
+
+
     }
 }
