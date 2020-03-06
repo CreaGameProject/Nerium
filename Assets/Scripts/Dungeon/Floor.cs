@@ -15,6 +15,7 @@ using Vector2 = UnityEngine.Vector2;
 
 namespace Assets.Scripts.Dungeon
 {
+    // Dungeon.MakeFloorによって生成
     public class Floor
     {
         private Room[] rooms;
@@ -27,7 +28,7 @@ namespace Assets.Scripts.Dungeon
 
         public int NowTurn { get; }
 
-        public TerrainType[,] terrains { get; set; }
+        public TerrainType[,] Terrains { get; set; }
 
         public IEnumerable<Room> Rooms => rooms;
 
@@ -41,6 +42,9 @@ namespace Assets.Scripts.Dungeon
 
         public Cell this[Vector2Int v] => new Cell(this, v);
 
+        public Floor()
+        {
 
+        }
     }
 }
