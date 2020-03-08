@@ -1,18 +1,27 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
+using Assets.Scripts.Items;
+using Assets.Scripts.States;
 
-public class IDungeonCharacter : MonoBehaviour
+namespace Assets.Scripts.Characters
 {
-    // Start is called before the first frame update
-    void Start()
+    public enum Force
     {
-        
+
     }
 
-    // Update is called once per frame
-    void Update()
+    public interface IDungeonCharacter
     {
-        
+        string Name { get; }
+        Force Force { get; }
+        IEnumerator Turn();
+
+        bool Attacked(int power, bool isShot, BattleCharacter character = null, IItem item = null);
+
+        bool Healed(int power, BattleCharacter character = null, IItem item = null);
+
+        bool AddState(State state);
+
+        bool HealStates(params StateID[] states);
     }
 }

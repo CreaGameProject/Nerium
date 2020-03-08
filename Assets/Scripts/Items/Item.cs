@@ -3,6 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum ItemID
+{
+
+}
+
 public abstract class Item
 {
     protected Dictionary<string, Func<IEnumerator>> choices = new Dictionary<string, Func<IEnumerator>>();

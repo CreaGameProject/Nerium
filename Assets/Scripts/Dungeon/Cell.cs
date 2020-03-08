@@ -4,6 +4,8 @@ using Assets.Scripts.Dungeon;
 using Assets.Scripts.Items;
 using UnityEngine;
 using UnityEngine.UIElements;
+using Assets.Scripts.Characters;
+using IDungeonCharacter = Assets.Scripts.Characters.IDungeonCharacter;
 
 public class Cell
 {
