@@ -1,5 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using Assets.Scripts.Characters;
 using UnityEngine;
 
 public enum EnemyID
@@ -7,17 +9,7 @@ public enum EnemyID
 
 }
 
-public class Enemy : MonoBehaviour
+public abstract class Enemy : BattleCharacter
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    public override Force Force => Force.Enemy;
 }

@@ -7,7 +7,7 @@ namespace Assets.Scripts.Characters
 {
     public enum Force
     {
-
+        None, Player, Enemy
     }
 
     public interface IDungeonCharacter
