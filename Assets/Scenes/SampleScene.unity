@@ -258,6 +258,7 @@ GameObject:
   - component: {fileID: 1181290525}
   - component: {fileID: 1181290527}
   - component: {fileID: 1181290526}
+  - component: {fileID: 1181290528}
   m_Layer: 0
   m_Name: Tilemap
   m_TagString: Untagged
@@ -272,7 +273,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1181290524}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -343,7 +344,7 @@ Tilemap:
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Origin: {x: 0, y: 0, z: 0}
   m_Size: {x: 0, y: 0, z: 1}
-  m_TileAnchor: {x: 0.5, y: 0.5, z: 0}
+  m_TileAnchor: {x: 0, y: 0, z: 0}
   m_TileOrientation: 0
   m_TileOrientationMatrix:
     e00: 1
@@ -362,30 +363,13 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
---- !u!1 &2087025187
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2087025189}
-  - component: {fileID: 2087025188}
-  m_Layer: 0
-  m_Name: Depictor
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &2087025188
+--- !u!114 &1181290528
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2087025187}
+  m_GameObject: {fileID: 1181290524}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6fcba79bb852b9d4d998d1553ef35452, type: 3}
@@ -399,6 +383,24 @@ MonoBehaviour:
     _tile: {fileID: 11400000, guid: 0cfe42251048dab4283eb94a99b8c590, type: 2}
   - type: 2
     _tile: {fileID: 11400000, guid: b35a9ad18c3b56b4aa1f0bf47b9018a9, type: 2}
+  cellSize: 0
+--- !u!1 &2087025187
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2087025189}
+  - component: {fileID: 2087025190}
+  m_Layer: 0
+  m_Name: Depictor
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!4 &2087025189
 Transform:
   m_ObjectHideFlags: 0
@@ -413,3 +415,15 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2087025190
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2087025187}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 812a9684d0173c84c86d52b81f7c59f5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

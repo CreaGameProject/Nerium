@@ -94,28 +94,28 @@ namespace GridMap
     /// タイルマップに特化した2次元配列管理クラス
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class Map<T> : UnConvertibleMap<T> where T:IConvertible
+    public class GridMap<T> : UnConvertibleMap<T> where T:IConvertible
     {
         // コンストラクタ2種
-        public Map(Vector2Int range, Initializer function = null) : base(range, function){}
-        public Map(T[,] matrix) : base(matrix){}
+        public GridMap(Vector2Int range, Initializer function = null) : base(range, function){}
+        public GridMap(T[,] matrix) : base(matrix){}
 
         // 演算子オーバーロード
-        public static implicit operator Map<float>(Map<T> map)=>new Map<float>(map.Range, (x,y)=>(float)Convert.ToDouble(map[x,y]));
-        public static implicit operator Map<double>(Map<T> map)=>new Map<double>(map.Range, (x,y)=>Convert.ToDouble(map[x,y]));
-        public static implicit operator Map<decimal>(Map<T> map)=>new Map<decimal>(map.Range, (x,y)=>Convert.ToDecimal(map[x,y]));
-        public static explicit operator Map<int>(Map<T> map)=>new Map<int>(map.Range, (x,y)=>Convert.ToInt32(map[x,y]));
-        public static explicit operator Map<long>(Map<T> map)=>new Map<long>(map.Range, (x,y)=>Convert.ToInt64(map[x,y]));
-        public static Map<T> operator +(Map<T> l, Map<T> r) => l.RangeCheck(r) ? new Map<T>(l.Range, (x,y) => Operator(Expression.Add)(l[x,y], r[x,y])) : new Map<T>(l.Range);
-        public static Map<T> operator -(Map<T> l, Map<T> r) => l.RangeCheck(r) ? new Map<T>(l.Range, (x,y) => Operator(Expression.Subtract)(l[x,y], r[x,y])) : new Map<T>(l.Range);
-        public static Map<T> operator *(Map<T> l, Map<T> r) => l.RangeCheck(r) ? new Map<T>(l.Range, (x,y) => Operator(Expression.Multiply)(l[x,y], r[x,y])) : new Map<T>(l.Range);
-        public static Map<T> operator /(Map<T> l, Map<T> r) => l.RangeCheck(r) ? new Map<T>(l.Range, (x,y) => Operator(Expression.Divide)(l[x,y], r[x,y])) : new Map<T>(l.Range);
-        public static Map<T> operator %(Map<T> l, Map<T> r) => l.RangeCheck(r) ? new Map<T>(l.Range, (x,y) => Operator(Expression.Modulo)(l[x,y], r[x,y])) : new Map<T>(l.Range);
-        public static Map<T> operator +(Map<T> l, T r) => new Map<T>(l.Range, (x,y)=>Operator(Expression.Add)(l[x,y], r));
-        public static Map<T> operator -(Map<T> l, T r) => new Map<T>(l.Range, (x,y)=>Operator(Expression.Subtract)(l[x,y], r));
-        public static Map<T> operator *(Map<T> l, T r) => new Map<T>(l.Range, (x,y)=>Operator(Expression.Multiply)(l[x,y], r));
-        public static Map<T> operator /(Map<T> l, T r) => new Map<T>(l.Range, (x,y)=>Operator(Expression.Divide)(l[x,y], r));
-        public static Map<T> operator %(Map<T> l, T r) => new Map<T>(l.Range, (x,y)=>Operator(Expression.Modulo)(l[x,y], r));
+        public static implicit operator GridMap<float>(GridMap<T> gridMap)=>new GridMap<float>(gridMap.Range, (x,y)=>(float)Convert.ToDouble(gridMap[x,y]));
+        public static implicit operator GridMap<double>(GridMap<T> gridMap)=>new GridMap<double>(gridMap.Range, (x,y)=>Convert.ToDouble(gridMap[x,y]));
+        public static implicit operator GridMap<decimal>(GridMap<T> gridMap)=>new GridMap<decimal>(gridMap.Range, (x,y)=>Convert.ToDecimal(gridMap[x,y]));
+        public static explicit operator GridMap<int>(GridMap<T> gridMap)=>new GridMap<int>(gridMap.Range, (x,y)=>Convert.ToInt32(gridMap[x,y]));
+        public static explicit operator GridMap<long>(GridMap<T> gridMap)=>new GridMap<long>(gridMap.Range, (x,y)=>Convert.ToInt64(gridMap[x,y]));
+        public static GridMap<T> operator +(GridMap<T> l, GridMap<T> r) => l.RangeCheck(r) ? new GridMap<T>(l.Range, (x,y) => Operator(Expression.Add)(l[x,y], r[x,y])) : new GridMap<T>(l.Range);
+        public static GridMap<T> operator -(GridMap<T> l, GridMap<T> r) => l.RangeCheck(r) ? new GridMap<T>(l.Range, (x,y) => Operator(Expression.Subtract)(l[x,y], r[x,y])) : new GridMap<T>(l.Range);
+        public static GridMap<T> operator *(GridMap<T> l, GridMap<T> r) => l.RangeCheck(r) ? new GridMap<T>(l.Range, (x,y) => Operator(Expression.Multiply)(l[x,y], r[x,y])) : new GridMap<T>(l.Range);
+        public static GridMap<T> operator /(GridMap<T> l, GridMap<T> r) => l.RangeCheck(r) ? new GridMap<T>(l.Range, (x,y) => Operator(Expression.Divide)(l[x,y], r[x,y])) : new GridMap<T>(l.Range);
+        public static GridMap<T> operator %(GridMap<T> l, GridMap<T> r) => l.RangeCheck(r) ? new GridMap<T>(l.Range, (x,y) => Operator(Expression.Modulo)(l[x,y], r[x,y])) : new GridMap<T>(l.Range);
+        public static GridMap<T> operator +(GridMap<T> l, T r) => new GridMap<T>(l.Range, (x,y)=>Operator(Expression.Add)(l[x,y], r));
+        public static GridMap<T> operator -(GridMap<T> l, T r) => new GridMap<T>(l.Range, (x,y)=>Operator(Expression.Subtract)(l[x,y], r));
+        public static GridMap<T> operator *(GridMap<T> l, T r) => new GridMap<T>(l.Range, (x,y)=>Operator(Expression.Multiply)(l[x,y], r));
+        public static GridMap<T> operator /(GridMap<T> l, T r) => new GridMap<T>(l.Range, (x,y)=>Operator(Expression.Divide)(l[x,y], r));
+        public static GridMap<T> operator %(GridMap<T> l, T r) => new GridMap<T>(l.Range, (x,y)=>Operator(Expression.Modulo)(l[x,y], r));
         
         // 一度使用された演算子のデリゲートが格納される
         private static readonly Dictionary<Binary, Func<T, T, T>> OpDictionary = new Dictionary<Binary, Func<T, T, T>>();
@@ -144,9 +144,9 @@ namespace GridMap
         /// <param name="left"></param>
         /// <param name="right"></param>
         /// <returns></returns>
-        public static Map<T> Dot(Map<T> left, Map<T> right)
+        public static GridMap<T> Dot(GridMap<T> left, GridMap<T> right)
         {
-            var result = new Map<T>(new Vector2Int(right.Range.x, left.Range.y));
+            var result = new GridMap<T>(new Vector2Int(right.Range.x, left.Range.y));
             if (left.Range.x != right.Range.y) return result;
             result.MatrixOperate((x1, y1) =>
             {

@@ -1,19 +1,16 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace Assets.Scripts.Dungeon
 {
-    public class Dungeon : MonoBehaviour
+    public abstract class Dungeon
     {
-        // Start is called before the first frame update
-        void Start()
-        {
-        
-        }
+        public string Name { get; }
 
-        // Update is called once per frame
-        void Update()
-        {
+        public int MaxFloorNum { get; }
 
-        }
+        public abstract Floor MakeFloor(int floorNum);
+
+
     }
 }
