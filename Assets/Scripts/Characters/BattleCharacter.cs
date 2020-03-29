@@ -9,6 +9,7 @@ public abstract class BattleCharacter : IDungeonCharacter
 {
     public abstract string Name { get; }
     public abstract Force Force { get; }
+    public Vector2Int Position { get; }
 
     public IEnumerator Turn()
     {

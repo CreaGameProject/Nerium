@@ -11,18 +11,18 @@ namespace Assets.Scripts.Systems
 {
     public class GameManager : SingletonMonoBehaviour<GameManager>
     {
-        public Dungeon.Dungeon CurrentDungeon { get; private set; }
-        public Floor CurrentFloor { get; private set; }
-        public Player GetPlayer { get; private set; }
+        public static Dungeon.Dungeon CurrentDungeon { get; private set; }
+        public static Floor CurrentFloor { get; private set; }
+        public static Player GetPlayer { get; private set; }
 
-        public void SetDungeon(Dungeon.Dungeon dungeon, Player player, int jumpTo = 1)
+        public static void SetDungeon(Dungeon.Dungeon dungeon, Player player, int jumpTo = 1)
         {
             CurrentDungeon = dungeon;
             GetPlayer = player;
             JumpFloor(jumpTo);
         }
 
-        public void NextFloor()
+        public static void NextFloor()
         {
             if (CurrentFloor.Number == CurrentDungeon.MaxFloorNum)
             {
@@ -31,21 +31,30 @@ namespace Assets.Scripts.Systems
             JumpFloor(CurrentFloor.Number + 1);
         }
 
-        public void JumpFloor(int floorNum)
+        public static void JumpFloor(int floorNum)
         {
             if (floorNum <= 0 || floorNum > CurrentDungeon.MaxFloorNum)
             {
                 Debug.LogError("階数が不正です。入力された階数:" + floorNum);
             }
             CurrentFloor = CurrentDungeon.MakeFloor(floorNum);
+            Instance.StartFloor();
+        }
+
+        private void StartFloor()
+        {
+            StartCoroutine(ManageTurn());
         }
 
         private IEnumerator ManageTurn()
         {
-            return null;
+            for (int turn = 1; turn <= CurrentFloor.MaxTurn; turn++)
+            {
+                yield return CurrentFloor.NextTurn();
+            }
         }
 
-        private void DungeonClear()
+        private static void DungeonClear()
         {
 
         }

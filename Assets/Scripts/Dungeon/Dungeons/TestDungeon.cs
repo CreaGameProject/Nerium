@@ -10,6 +10,7 @@ public class TestDungeon : Dungeon
     public TestDungeon()
     {
         Name = "test dungeon";
+        MaxFloorNum = 1;
     }
 
     public override Floor MakeFloor(int floorNum)
@@ -17,7 +18,7 @@ public class TestDungeon : Dungeon
         var range = new Vector2Int(15, 10);
         var terrain = new GridMap<TerrainType>(range,
             (c, r) => c * r != 0 && c != 15 && r != 10 ? TerrainType.Floor : TerrainType.Wall).Matrix;
-        var floor = new Floor(floorNum, terrain, new List<Room>(), new Player());
+        var floor = new Floor(floorNum, 500, terrain, new List<Room>(), new Player());
         return floor;
     }
 }

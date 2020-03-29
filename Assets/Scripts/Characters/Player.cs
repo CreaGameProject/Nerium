@@ -4,7 +4,7 @@ using Assets.Scripts.States;
 
 namespace Assets.Scripts.Characters
 {
-    public class Player : BattleCharacter, IDungeonCharacter
+    public class Player : BattleCharacter
     {
         public override string Name { get; }
         public override Force Force { get; }
