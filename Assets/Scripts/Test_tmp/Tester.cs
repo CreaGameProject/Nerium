@@ -1,20 +1,28 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using GridMap;
+﻿using Assets.Scripts.Characters;
+using Assets.Scripts.Systems;
 using UnityEngine;
 
-public class Tester : MonoBehaviour
+namespace Assets.Scripts.Test_tmp
 {
-    // Start is called before the first frame update
-    void Start()
+    public class Tester : MonoBehaviour
     {
-        var gor =  new UnConvertibleMap<TerrainType>(new Vector2Int(20,10), (i, i1) => TerrainType.Floor);
-        TilemapManager.GenerateFloor(gor);
-    }
+        [SerializeField] private Player player;
 
-    // Update is called once per frame
-    void Update()
-    {
+        // Start is called before the first frame update
+        void Start()
+        {
+            // var gor =  new UnConvertibleMap<TerrainType>(new Vector2Int(20,10), (i, i1) => TerrainType.Floor);
+            //
+            // TilemapManager.GenerateFloor(gor);
+            var dungeon = new TestDungeon();
+            
+            GameManager.SetDungeon(dungeon, player);
+        }
+
+        // Update is called once per frame
+        void Update()
+        {
         
+        }
     }
 }

@@ -36,12 +36,12 @@ public class TilemapManager : SingletonMonoBehaviour<TilemapManager>
     }
 
     // シーン上の座標を取得する
-    public static Vector3 GetScenePosition(Vector2Int localPosition) => Instance.transform.position + new Vector3(localPosition.x, 0, localPosition.y) * CellSize;
+    public static Vector3 GetScenePosition(Vector2Int localPosition) => Instance.transform.position + new Vector3(localPosition.x, localPosition.y, 0) * CellSize;
 
     // タイルマップを描画する
-    public static void GenerateFloor(UnConvertibleMap<TerrainType> dungeonData)
+    public static void GenerateFloor(TerrainType[,] dungeonData)
     {
-        var range = dungeonData.Range;
+        var range = new Vector2Int(dungeonData.GetLength(0), dungeonData.GetLength(1));
 
         var positionArray = new UnConvertibleArray<Vector3Int>(
             new UnConvertibleMap<Vector3Int>(range, (c, r) => new Vector3Int(c, r, 0)));

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Assets.Scripts.Characters;
 using UnityEngine;
 
 namespace Assets.Scripts.Dungeon
@@ -9,8 +10,6 @@ namespace Assets.Scripts.Dungeon
 
         public int MaxFloorNum { get; protected set; }
 
-        public abstract Floor MakeFloor(int floorNum);
-
-
+        public abstract Floor MakeFloor(int floorNum, Player player);
     }
 }

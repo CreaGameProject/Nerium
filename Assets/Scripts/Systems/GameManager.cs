@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using Assets.Scripts.Characters;
 using Assets.Scripts.Dungeon;
+using GridMap;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
 
@@ -37,7 +38,8 @@ namespace Assets.Scripts.Systems
             {
                 Debug.LogError("階数が不正です。入力された階数:" + floorNum);
             }
-            CurrentFloor = CurrentDungeon.MakeFloor(floorNum);
+            CurrentFloor = CurrentDungeon.MakeFloor(floorNum, GetPlayer);
+            TilemapManager.GenerateFloor(CurrentFloor.Terrains);
             Instance.StartFloor();
         }
 
@@ -50,6 +52,7 @@ namespace Assets.Scripts.Systems
         {
             for (int turn = 1; turn <= CurrentFloor.MaxTurn; turn++)
             {
+                Debug.Log("Turn : " + CurrentFloor.Turn);
                 yield return CurrentFloor.NextTurn();
             }
         }

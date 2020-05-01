@@ -22,15 +22,15 @@ namespace Assets.Scripts.Dungeon
     // Dungeon.MakeFloorによって生成
     public class Floor
     {
-        private Room[] rooms;
-        private List<IDungeonCharacter> characters;
-        private List<IItem> items;
+        private readonly Room[] rooms;
+        private readonly List<IDungeonCharacter> characters;
+        private readonly List<IItem> items;
         public Dictionary<EnemyID, float> EnemyTable { get; }
         public float EnemyPopProbability { get; set; }
 
         public int Number { get; }
 
-        public int NowTurn { get; private set; }
+        public int Turn { get; private set; }
 
         public int MaxTurn { get; }
 
@@ -42,7 +42,7 @@ namespace Assets.Scripts.Dungeon
 
         public IEnumerable<IDungeonCharacter> Enemies => characters.Skip(1);
 
-        public IDungeonCharacter Player => characters.First();
+        public Player Player => GameManager.GetPlayer;//characters.First() as Player;
 
         public IEnumerable<IItem> Items => items;
 
@@ -60,17 +60,76 @@ namespace Assets.Scripts.Dungeon
             EnemyTable = new Dictionary<EnemyID, float>();
             items = new List<IItem>();
             EnemyPopProbability = 0;
-            NowTurn = 1;
+            Turn = 1;
         }
 
         public IEnumerator NextTurn()
         {
-            foreach (var character in characters)
+            // ファストムーブ、クイックムーブなど考慮すべき点が多々あり
+            ActCategory playerActCat = ActCategory.Wait; // 仮代入
+            yield return new WaitUntil(() => Player.Command(ref playerActCat));
+
+            var actionActors = new List<IDungeonCharacter>();
+            var moveActors = new List<IDungeonCharacter>();
+            var waitActors = new List<IDungeonCharacter>();
+
+            foreach (var character in Enemies)
             {
-                yield return null;
+                var cat = character.RequestActCategory();
+                switch (cat)
+                {
+                    case ActCategory.Action:
+                        actionActors.Add(character);
+                        break;
+                    case ActCategory.Move:
+                        moveActors.Add(character);
+                        break;
+                    case ActCategory.Wait:
+                        waitActors.Add(character);
+                        break;
+                }
             }
+
+            yield return Player.Turn(playerActCat);
+
+            if (playerActCat == ActCategory.Move)
+            { // プレイヤーが移動を行った場合
+                foreach (var actor in moveActors)
+                {
+                    yield return actor.Turn(ActCategory.Move);
+                }
+
+                yield return new WaitForSeconds(Settings.StepTime);
+
+                foreach (var actor in actionActors)
+                {
+                    yield return actor.Turn(ActCategory.Action);
+                }
+            }
+            else
+            { // プレイヤーが移動以外を行った場合
+                foreach (var actor in actionActors)
+                {
+                    yield return actor.Turn(ActCategory.Action);
+                }
+
+                foreach (var actor in moveActors)
+                {
+                    yield return actor.Turn(ActCategory.Move);
+                }
+
+                yield return new WaitForSeconds(Settings.StepTime);
+            }
+
+            foreach (var actor in waitActors)
+            {
+                yield return actor.Turn(ActCategory.Wait);
+            }
+
+            // yield return null;
+
             PopEnemies();
-            NowTurn++;
+            Turn++;
         }
 
         public IEnumerable<IDungeonCharacter> Throw(IItem item, Vector2Int basePosition, Vector2Int step,
@@ -91,6 +150,13 @@ namespace Assets.Scripts.Dungeon
 
         public bool Summon(IDungeonCharacter character, Vector2Int position)
         {
+            // ↓インスタンシエイトどうするの？
+            // if (InRange(position))
+            // {
+            //     character.Floor = this;
+            //     characters.Add(character);
+            //     character.Position = position;
+            // }
             return false;
         }
 
@@ -139,7 +205,7 @@ namespace Assets.Scripts.Dungeon
                 var rand = Random.Range(0, candRooms.Count());
                 popRoom = candRooms.ElementAt(rand);
             }
-
+            
             // 召喚するキャラクターを決める
             var prob = Random.Range(0, EnemyTable.Values.Sum());
             foreach (var enemy in EnemyTable)

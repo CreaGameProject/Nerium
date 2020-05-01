@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Assets.Scripts.Dungeon;
 using Assets.Scripts.Items;
 using UnityEngine;
@@ -23,7 +24,13 @@ public class Cell
 
     public Cell(Floor floor, Vector2Int position)
     {
-
+        this.TerrainType = floor.Terrains[position.x, position.y];
+        var candCharas = floor.Characters.Where(c=>c.Position.Equals(position));
+        if (candCharas.Count() == 1)
+            Character = candCharas.First();
+        var candItems = floor.Items.Where(i => i.Position.Equals(position));
+        if (candItems.Count() == 1)
+            Item = candItems.First();
     }
 
     public IItem Pick()
