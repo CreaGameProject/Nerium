@@ -6,10 +6,12 @@ using UnityEngine;
 
 public enum EnemyID
 {
-
+    TestEnemy
 }
 
 public abstract class Enemy : BattleCharacter
 {
+    public EnemyID Id { get; }
+    
     public override Force Force => Force.Enemy;
 }

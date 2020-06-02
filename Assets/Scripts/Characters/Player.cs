@@ -16,7 +16,7 @@ namespace Assets.Scripts.Characters
     public class Player : BattleCharacter
     {
         public override string Name { get; } = "ネリウム";
-        public override Force Force { get; }
+        public override Force Force { get; } = Force.Player;
         
         public override bool Attacked(int power, bool isShot, BattleCharacter character = null, IItem item = null)
         {
@@ -47,6 +47,23 @@ namespace Assets.Scripts.Characters
         /// <returns></returns>
         public bool Command(ref ActCategory category)
         {
+            bool commandAccept = false;
+            if (commandAccept = MoveCommandCheck())
+            {
+                category = ActCategory.Move;
+            }
+
+            if (commandAccept = AttackCommandCheck())
+            {
+                category = ActCategory.Action;
+            }
+
+            return commandAccept;
+        }
+
+        // 
+        private bool MoveCommandCheck()
+        {
             var shift = Input.GetKey(KeyCode.LeftShift);
             var ctrl = Input.GetKey(KeyCode.LeftControl);
             var input = new Vector2Int();
@@ -66,7 +83,6 @@ namespace Assets.Scripts.Characters
             
             if (input != Vector2Int.zero && CanMoveTo(input))
             {
-                category = ActCategory.Move;
                 ActionBuffer = Move(Settings.StepTime, input);
                 return true;
             }
@@ -74,43 +90,33 @@ namespace Assets.Scripts.Characters
             return false;
         }
 
-        // protected override IEnumerator Behave()
-        // {
-        //     while(true)
-        //     {
-        //         var shift = Input.GetKey(KeyCode.LeftShift);
-        //         var ctrl = Input.GetKey(KeyCode.LeftControl);
-        //         var input = new Vector2Int();
-        //         input += Input.GetKey(KeyCode.UpArrow) ? Vector2Int.up : Vector2Int.zero;
-        //         input += Input.GetKey(KeyCode.DownArrow) ? Vector2Int.down : Vector2Int.zero;
-        //         input += Input.GetKey(KeyCode.RightArrow) ? Vector2Int.right : Vector2Int.zero;
-        //         input += Input.GetKey(KeyCode.LeftArrow) ? Vector2Int.left : Vector2Int.zero;
-        //
-        //         if (ctrl)
-        //         {
-        //             Direction = input;
-        //             continue;
-        //         }
-        //
-        //         if (shift && input.sqrMagnitude == 1) continue;
-        //
-        //         if (input != Vector2Int.zero)
-        //         {
-        //             StartCoroutine(Move(1, input));
-        //             break;
-        //         }
-        //
-        //         yield return null;
-        //     }
-        //     
-        //     
-        //
-        //     // inputIsActive = true;
-        //     // InputManager.SetGroupActive("PlayerCommands", true);
-        //     // yield return new WaitUntil(()=>!inputIsActive);
-        //     //
-        //     // InputManager.SetGroupActive("PlayerCommands", false);
-        // }
+        private bool AttackCommandCheck()
+        {
+            var z = Input.GetKeyDown(KeyCode.Z);
+            var x = Input.GetKeyDown(KeyCode.X);
+            var c = Input.GetKeyDown(KeyCode.C);
+            if (z)
+            {
+                
+                Debug.Log(Floor);
+                if (Floor[Position + Direction].Character != null)
+                {
+                    var target = Floor[Position + Direction].Character;
+                    target.Attacked(Attack, false, this);
+                }
+
+                IEnumerator ww()
+                {
+                    yield return new WaitForSeconds(1);
+                }
+
+                ActionBuffer = ww();
+                
+                return true;
+            }
+
+            return false;
+        }
 
         public override IEnumerator Turn(ActCategory cat)
         {
@@ -125,45 +131,10 @@ namespace Assets.Scripts.Characters
             }
         }
 
-        private void PlayerMove(Vector2Int step)
-        {
-            IEnumerator Move()
-            {
-                yield return base.Move(1, step);
-            }
-
-            StartCoroutine(Move());
-        }
 
         private void Start()
         {
-            // var diagonals = new KeyEvent[4]
-            // {
-            //     new KeyEvent(InputType.Constant, () => PlayerMove(Vector2Int.up + Vector2Int.right), "PlayerCommands",
-            //         KeyCode.UpArrow, KeyCode.RightArrow),
-            //     new KeyEvent(InputType.Constant, () => PlayerMove(Vector2Int.up + Vector2Int.left), "PlayerCommands",
-            //         KeyCode.UpArrow, KeyCode.LeftArrow),
-            //     new KeyEvent(InputType.Constant, () => PlayerMove(Vector2Int.down + Vector2Int.right), "PlayerCommands",
-            //         KeyCode.DownArrow, KeyCode.RightArrow),
-            //     new KeyEvent(InputType.Constant, () => PlayerMove(Vector2Int.down + Vector2Int.right), "PlayerCommands",
-            //         KeyCode.DownArrow, KeyCode.RightArrow)
-            // };
-            //
-            // var commands = new List<KeyEvent>()
-            // {
-            //     new KeyEvent(InputType.Constant, ()=>PlayerMove(Vector2Int.up), "PlayerCommands", KeyCode.UpArrow),
-            //     new KeyEvent(InputType.Constant, ()=>PlayerMove(Vector2Int.down), "PlayerCommands", KeyCode.DownArrow),
-            //     new KeyEvent(InputType.Constant, ()=>PlayerMove(Vector2Int.left), "PlayerCommands", KeyCode.LeftArrow),
-            //     new KeyEvent(InputType.Constant, ()=>PlayerMove(Vector2Int.right), "PlayerCommands", KeyCode.RightArrow),
-            //     diagonals[0], diagonals[1], diagonals[2], diagonals[3],
-            //     new KeyEvent(InputType.Down, ()=>diagonals.Select(e=>e.IsActive = false), "PlayerCommands", KeyCode.LeftShift),
-            //     new KeyEvent(InputType.Up, ()=>diagonals.Select(e=>e.IsActive = true), "PlayerCommands", KeyCode.LeftShift),
-            //     new KeyEvent(InputType.Down, ()=>Debug.Log("down"), "", KeyCode.D)
-            // };
-            //
-            //
-            // InputManager.SetGroupActive("PlayerCommands", false);
-            // InputManager.Events.AddRange(commands);
+            
         }
     }
 }

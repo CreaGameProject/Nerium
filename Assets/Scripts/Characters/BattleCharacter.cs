@@ -60,18 +60,22 @@ public abstract class BattleCharacter : MonoBehaviour, IDungeonCharacter
     }
 
     public Floor Floor { get; set; }
-
-    public abstract bool Attacked(int power, bool isShot, BattleCharacter character = null, IItem item = null);
+    
+    public virtual bool Attacked(int power, bool isShot, BattleCharacter character = null, IItem item = null)
+    {
+        Hp -= power - Defense;
+        return true;
+    }
     public abstract bool Healed(int power, BattleCharacter character = null, IItem item = null);
     public abstract bool AddState(State state);
     public abstract bool HealStates(params StateID[] states);
 
-    public int MaxHp { get; }
-    public int Hp { get; }
-    public int Attack { get; }
-    public int Dexterity { get; }
-    public int Defense { get; }
-    public int Resist { get; }
+    public int MaxHp { get; set; }
+    public int Hp { get; set; }
+    public int Attack { get; set; }
+    public int Dexterity { get; set; }
+    public int Defense { get; set; }
+    public int Resist { get; set; }
     public IEnumerable<State> GetStates => States;
 
     protected List<State> States = new List<State>();
@@ -190,5 +194,10 @@ public abstract class BattleCharacter : MonoBehaviour, IDungeonCharacter
             }
             Position += step;
         }
+    }
+
+    private void Start()
+    {
+        Floor = GameManager.CurrentFloor;
     }
 }
