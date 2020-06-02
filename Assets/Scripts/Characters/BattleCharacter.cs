@@ -52,9 +52,9 @@ public abstract class BattleCharacter : MonoBehaviour, IDungeonCharacter
             direction = new Vector2Int(x, y);
             if (gameObject != null)
             {
-                var rotation = transform.rotation;
-                rotation.z = Mathf.Atan2(y, x) + 90;
-                transform.rotation = rotation;
+                //var rotation = transform.rotation;
+                //rotation.z = Mathf.Atan2(y, x) + 90;
+                //transform.rotation = rotation;
             }
         }
     }

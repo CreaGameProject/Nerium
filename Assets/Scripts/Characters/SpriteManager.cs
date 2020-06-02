@@ -2,15 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CharacterCamera : MonoBehaviour
+public class SpriteManager : MonoBehaviour
 {
-    private Camera camera;
+    private 
+    private Sprite[] currentLoops;
+    
 
     // Start is called before the first frame update
     void Start()
     {
-        var cameraTf = GameObject.FindWithTag("MainCamera").transform;
-        cameraTf.SetParent(transform);
+        
     }
 
     // Update is called once per frame
