@@ -11,6 +11,7 @@ using Assets.Scripts.Systems;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
+
 public enum MovingAbility
 {
     Walkable, Corner, UnWalkable
@@ -23,7 +24,7 @@ public enum MovingAbility
 public abstract class BattleCharacter : MonoBehaviour, IDungeonCharacter
 {
     private Vector2Int position;
-    private Vector2Int direction;
+    private Vector2Int direction = Vector2Int.down;
 
     public abstract string Name { get; }
     public abstract Force Force { get; }
@@ -47,8 +48,8 @@ public abstract class BattleCharacter : MonoBehaviour, IDungeonCharacter
         get => direction;
         set
         {
-            var x = value.x == 0 ? 0 : value.x / value.x;
-            var y = value.y == 0 ? 0 : value.y / value.y;
+            var x = value.x == 0 ? 0 : value.x / Mathf.Abs(value.x);
+            var y = value.y == 0 ? 0 : value.y / Mathf.Abs(value.y);
             direction = new Vector2Int(x, y);
             if (gameObject != null)
             {

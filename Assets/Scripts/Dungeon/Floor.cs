@@ -69,6 +69,8 @@ namespace Assets.Scripts.Dungeon
             ActCategory playerActCat = ActCategory.Wait; // 仮代入
             yield return new WaitUntil(() => Player.Command(ref playerActCat));
 
+            Debug.Log("kore");
+            
             var actionActors = new List<IDungeonCharacter>();
             var moveActors = new List<IDungeonCharacter>();
             var waitActors = new List<IDungeonCharacter>();

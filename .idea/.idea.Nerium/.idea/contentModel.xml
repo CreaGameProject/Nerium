@@ -15,6 +15,7 @@
             <e p="Enemy.cs" t="Include" />
             <e p="IDungeonCharacter.cs" t="Include" />
             <e p="Player.cs" t="Include" />
+            <e p="SpriteManager.cs" t="Include" />
           </e>
           <e p="Dungeon" t="Include">
             <e p="Cell.cs" t="Include" />

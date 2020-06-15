@@ -52,8 +52,7 @@ namespace Assets.Scripts.Characters
             {
                 category = ActCategory.Move;
             }
-
-            if (commandAccept = AttackCommandCheck())
+            else if (commandAccept = AttackCommandCheck())
             {
                 category = ActCategory.Action;
             }
