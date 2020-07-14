@@ -68,7 +68,6 @@ public class SpriteManager : MonoBehaviour
     {
         step = step % 4;
         if (step == 3) step = 1;
-        Debug.Log(index);
         return sprites[index, step];
     }
 }

@@ -42,9 +42,11 @@
             <e p="Item.cs" t="Include" />
           </e>
           <e p="States" t="Include">
+            <e p="IncompetenceState.cs" t="Include" />
             <e p="State.cs" t="Include" />
           </e>
           <e p="Systems" t="Include">
+            <e p="AttackParam.cs" t="Include" />
             <e p="CharacterCamera.cs" t="Include" />
             <e p="GameManager.cs" t="Include" />
             <e p="IDTranslator.cs" t="Include" />
@@ -53,6 +55,7 @@
             <e p="Navigation.cs" t="Include" />
             <e p="Settings.cs" t="Include" />
             <e p="SingletonMonoBehaviour.cs" t="Include" />
+            <e p="TurnManager.cs" t="Include" />
             <e p="Utility.cs" t="Include" />
           </e>
           <e p="Test_tmp" t="Include">

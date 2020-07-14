@@ -68,8 +68,6 @@ namespace Assets.Scripts.Dungeon
             // ファストムーブ、クイックムーブなど考慮すべき点が多々あり
             ActCategory playerActCat = ActCategory.Wait; // 仮代入
             yield return new WaitUntil(() => Player.Command(ref playerActCat));
-
-            Debug.Log("kore");
             
             var actionActors = new List<IDungeonCharacter>();
             var moveActors = new List<IDungeonCharacter>();
