@@ -60,6 +60,25 @@ namespace Assets.Scripts.Characters
             return commandAccept;
         }
 
+        /// <summary>
+        /// 使用不可
+        /// </summary>
+        /// <returns>必ずActionが返ってくる</returns>
+        public override ActCategory RequestActCategory()
+        {
+            return ActCategory.Action;
+        }
+        
+        public override IEnumerator Action()
+        {
+            yield return ActionBuffer;
+        }
+
+        public override void Move()
+        {
+            StartCoroutine(ActionBuffer);
+        }
+
         // 
         private bool MoveCommandCheck()
         {
@@ -116,20 +135,6 @@ namespace Assets.Scripts.Characters
 
             return false;
         }
-
-        public override IEnumerator Turn(ActCategory cat)
-        {
-            switch (cat)
-            {
-                case ActCategory.Move:
-                    StartCoroutine(ActionBuffer);
-                    break;
-                default:
-                    yield return null;
-                    break;
-            }
-        }
-
 
         private void Start()
         {

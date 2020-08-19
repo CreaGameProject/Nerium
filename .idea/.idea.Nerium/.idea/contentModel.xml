@@ -24,6 +24,7 @@
               <e p="TestDungeon.cs" t="Include" />
             </e>
             <e p="Floor.cs" t="Include" />
+            <e p="IFloor.cs" t="Include" />
             <e p="Room.cs" t="Include" />
           </e>
           <e p="Fields" t="Include">

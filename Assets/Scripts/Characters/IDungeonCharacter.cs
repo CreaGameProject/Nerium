@@ -14,7 +14,7 @@ namespace Assets.Scripts.Characters
 
     public enum ActCategory
     {
-        Wait, Move, Action
+        Move, Action
     }
 
     public interface IDungeonCharacter
@@ -27,13 +27,17 @@ namespace Assets.Scripts.Characters
 
         ActCategory RequestActCategory();
 
-        IEnumerator Turn(ActCategory cat);
+        void Move();
+
+        IEnumerator Action();
 
         bool Attacked(int power, bool isShot, BattleCharacter character = null, IItem item = null);
 
         bool Healed(int power, BattleCharacter character = null, IItem item = null);
 
         bool AddState(State state);
+
+        IEnumerable<State> GetStates { get; }
 
         bool HealStates(params StateID[] states);
     }

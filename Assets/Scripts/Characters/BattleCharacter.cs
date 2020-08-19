@@ -61,7 +61,8 @@ public abstract class BattleCharacter : MonoBehaviour, IDungeonCharacter
     }
 
     public Floor Floor { get; set; }
-    
+
+
     public virtual bool Attacked(int power, bool isShot, BattleCharacter character = null, IItem item = null)
     {
         Hp -= power - Defense;
@@ -69,6 +70,7 @@ public abstract class BattleCharacter : MonoBehaviour, IDungeonCharacter
     }
     public abstract bool Healed(int power, BattleCharacter character = null, IItem item = null);
     public abstract bool AddState(State state);
+
     public abstract bool HealStates(params StateID[] states);
 
     public int MaxHp { get; set; }
@@ -94,16 +96,11 @@ public abstract class BattleCharacter : MonoBehaviour, IDungeonCharacter
         }
     }
 
-    public virtual ActCategory RequestActCategory()
-    {
-        return ActCategory.Wait;
-    }
+    public abstract ActCategory RequestActCategory();
 
-    public virtual IEnumerator Turn(ActCategory cat)
-    {
-        yield break;
-    }
+    public abstract void Move();
 
+    public abstract IEnumerator Action();
 
     // キャラクターをしていした座標にワープさせる
     // 移動不可の場合false

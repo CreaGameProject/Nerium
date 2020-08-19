@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using Assets.Scripts.Items;
 using Assets.Scripts.States;
 using UnityEditor;
@@ -8,6 +9,21 @@ namespace Assets.Scripts.Characters.Enemies
     public class TestEnemy : Enemy
     {
         public override string Name => "TestEnemy";
+
+        public override ActCategory RequestActCategory()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void Move()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override IEnumerator Action()
+        {
+            throw new NotImplementedException();
+        }
 
         public override bool Attacked(int power, bool isShot, BattleCharacter character = null, IItem item = null)
         {

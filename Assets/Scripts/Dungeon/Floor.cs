@@ -29,9 +29,7 @@ namespace Assets.Scripts.Dungeon
         public float EnemyPopProbability { get; set; }
 
         public int Number { get; }
-
-        public int Turn { get; private set; }
-
+        
         public int MaxTurn { get; }
 
         public TerrainType[,] Terrains { get; set; }
@@ -60,76 +58,6 @@ namespace Assets.Scripts.Dungeon
             EnemyTable = new Dictionary<EnemyID, float>();
             items = new List<IItem>();
             EnemyPopProbability = 0;
-            Turn = 1;
-        }
-
-        public IEnumerator NextTurn()
-        {
-            // ファストムーブ、クイックムーブなど考慮すべき点が多々あり
-            ActCategory playerActCat = ActCategory.Wait; // 仮代入
-            yield return new WaitUntil(() => Player.Command(ref playerActCat));
-            
-            var actionActors = new List<IDungeonCharacter>();
-            var moveActors = new List<IDungeonCharacter>();
-            var waitActors = new List<IDungeonCharacter>();
-
-            foreach (var character in Enemies)
-            {
-                var cat = character.RequestActCategory();
-                switch (cat)
-                {
-                    case ActCategory.Action:
-                        actionActors.Add(character);
-                        break;
-                    case ActCategory.Move:
-                        moveActors.Add(character);
-                        break;
-                    case ActCategory.Wait:
-                        waitActors.Add(character);
-                        break;
-                }
-            }
-
-            yield return Player.Turn(playerActCat);
-
-            if (playerActCat == ActCategory.Move)
-            { // プレイヤーが移動を行った場合
-                foreach (var actor in moveActors)
-                {
-                    yield return actor.Turn(ActCategory.Move);
-                }
-
-                yield return new WaitForSeconds(Settings.StepTime);
-
-                foreach (var actor in actionActors)
-                {
-                    yield return actor.Turn(ActCategory.Action);
-                }
-            }
-            else
-            { // プレイヤーが移動以外を行った場合
-                foreach (var actor in actionActors)
-                {
-                    yield return actor.Turn(ActCategory.Action);
-                }
-
-                foreach (var actor in moveActors)
-                {
-                    yield return actor.Turn(ActCategory.Move);
-                }
-
-                yield return new WaitForSeconds(Settings.StepTime);
-            }
-
-            foreach (var actor in waitActors)
-            {
-                yield return actor.Turn(ActCategory.Wait);
-            }
-
-            // yield return null;
-
-            PopEnemies();
-            Turn++;
         }
 
         public IEnumerable<IDungeonCharacter> Throw(IItem item, Vector2Int basePosition, Vector2Int step,

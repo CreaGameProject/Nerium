@@ -9,6 +9,7 @@ namespace Assets.Scripts.Items
         // アイテム名
         string Name { get; }
 
+        // ニックネームを設定する
         void SetNickName(string nickName);
 
         // アイテムの座標

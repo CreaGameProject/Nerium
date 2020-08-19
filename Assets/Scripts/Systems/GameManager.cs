@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using Systems;
 using Assets.Scripts.Characters;
 using Assets.Scripts.Dungeon;
 using GridMap;
@@ -16,23 +17,28 @@ namespace Assets.Scripts.Systems
         public static Floor CurrentFloor { get; private set; }
         public static Player GetPlayer { get; private set; }
 
+        private TurnManager turnManager;
+        
+        // 潜るダンジョンを指定
         public static void SetDungeon(Dungeon.Dungeon dungeon, Player player, int jumpTo = 1)
         {
             CurrentDungeon = dungeon;
             GetPlayer = player;
-            JumpFloor(jumpTo);
+            SetFloor(jumpTo);
         }
 
+        // 次のフロア呼び出し&開始
         public static void NextFloor()
         {
             if (CurrentFloor.Number == CurrentDungeon.MaxFloorNum)
             {
                 DungeonClear();
             }
-            JumpFloor(CurrentFloor.Number + 1);
+            SetFloor(CurrentFloor.Number + 1);
         }
 
-        public static void JumpFloor(int floorNum)
+        // 階数を指定してフロア呼び出し&開始
+        public static void SetFloor(int floorNum)
         {
             if (floorNum <= 0 || floorNum > CurrentDungeon.MaxFloorNum)
             {
@@ -40,21 +46,8 @@ namespace Assets.Scripts.Systems
             }
             CurrentFloor = CurrentDungeon.MakeFloor(floorNum, GetPlayer);
             TilemapManager.GenerateFloor(CurrentFloor.Terrains);
-            Instance.StartFloor();
-        }
-
-        private void StartFloor()
-        {
-            StartCoroutine(ManageTurn());
-        }
-
-        private IEnumerator ManageTurn()
-        {
-            for (int turn = 1; turn <= CurrentFloor.MaxTurn; turn++)
-            {
-                Debug.Log("Turn : " + CurrentFloor.Turn);
-                yield return CurrentFloor.NextTurn();
-            }
+            Instance.turnManager = new TurnManager(CurrentFloor);
+            Instance.turnManager.SetTurnLoop();
         }
 
         private static void DungeonClear()

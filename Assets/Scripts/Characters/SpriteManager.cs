@@ -24,6 +24,11 @@ public class SpriteManager : MonoBehaviour
         coroutine = StartCoroutine(Animation(Utility.GetDirectionIndex(currentDirection)));
     }
 
+    void a()
+    {
+        
+    }
+
     private IEnumerator Animation(int index)
     {
         while (this != null)
