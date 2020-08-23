@@ -12,17 +12,17 @@ namespace Assets.Scripts.Characters.Enemies
 
         public override ActCategory RequestActCategory()
         {
-            throw new NotImplementedException();
+            return ActCategory.Move;
         }
 
         public override void Move()
         {
-            throw new NotImplementedException();
+            
         }
 
         public override IEnumerator Action()
         {
-            throw new NotImplementedException();
+            yield return null;
         }
 
         public override bool Attacked(int power, bool isShot, BattleCharacter character = null, IItem item = null)
@@ -47,11 +47,7 @@ namespace Assets.Scripts.Characters.Enemies
 
         private void Start()
         {
-            MaxHp = 50;
-            Hp = 50;
-            Attack = 10;
-            Defense = 3;
-            Resist = 1;
+            status = new Status();
         }
     }
 }

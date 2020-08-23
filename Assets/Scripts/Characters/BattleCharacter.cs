@@ -10,6 +10,7 @@ using Assets.Scripts.States;
 using Assets.Scripts.Systems;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using Random = UnityEngine.Random;
 
 
 public enum MovingAbility
@@ -53,9 +54,9 @@ public abstract class BattleCharacter : MonoBehaviour, IDungeonCharacter
             direction = new Vector2Int(x, y);
             if (gameObject != null)
             {
-                //var rotation = transform.rotation;
-                //rotation.z = Mathf.Atan2(y, x) + 90;
-                //transform.rotation = rotation;
+                var ac = GetComponent<Animator>();
+                ac.SetFloat("x", x);
+                ac.SetFloat("y", y);
             }
         }
     }
@@ -65,7 +66,11 @@ public abstract class BattleCharacter : MonoBehaviour, IDungeonCharacter
 
     public virtual bool Attacked(int power, bool isShot, BattleCharacter character = null, IItem item = null)
     {
-        Hp -= power - Defense;
+        if (Random.value > 0.9)
+            return false;
+        status.Hp = Mathf.Max(0, status.Hp - (power - status.Defense));
+        if(status.Hp == 0)
+            Floor.Kill(this);
         return true;
     }
     public abstract bool Healed(int power, BattleCharacter character = null, IItem item = null);
@@ -73,12 +78,9 @@ public abstract class BattleCharacter : MonoBehaviour, IDungeonCharacter
 
     public abstract bool HealStates(params StateID[] states);
 
-    public int MaxHp { get; set; }
-    public int Hp { get; set; }
-    public int Attack { get; set; }
-    public int Dexterity { get; set; }
-    public int Defense { get; set; }
-    public int Resist { get; set; }
+    protected Status status;
+    public Status Status => status;
+
     public IEnumerable<State> GetStates => States;
 
     protected List<State> States = new List<State>();
@@ -102,8 +104,12 @@ public abstract class BattleCharacter : MonoBehaviour, IDungeonCharacter
 
     public abstract IEnumerator Action();
 
-    // キャラクターをしていした座標にワープさせる
-    // 移動不可の場合false
+    /// <summary>
+    /// キャラクターをしていした座標にワープさせる
+    /// 移動不可の場合false
+    /// </summary>
+    /// <param name="destination"></param>
+    /// <returns></returns>
     public bool Warp(Vector2Int destination)
     {
         var cell = GameManager.CurrentFloor[destination];

@@ -19,34 +19,37 @@ using Vector2 = UnityEngine.Vector2;
 
 namespace Assets.Scripts.Dungeon
 {
-    // Dungeon.MakeFloorによって生成
+    /// <summary>
+    /// Dungeonオブジェクトによって生成される
+    /// Floor上のオブジェクトに対して空間的な支配権を持つ
+    /// </summary>
     public class Floor
     {
-        private readonly Room[] rooms;
-        private readonly List<IDungeonCharacter> characters;
-        private readonly List<IItem> items;
-        public Dictionary<EnemyID, float> EnemyTable { get; }
-        public float EnemyPopProbability { get; set; }
+        private readonly Room[] rooms; // 各部屋
+        private readonly List<IDungeonCharacter> characters; // キャラクターレイヤーのオブジェクト
+        private readonly List<IItem> items; // アイテムレイヤーのオブジェクト
+        public Dictionary<EnemyID, float> EnemyTable { get; } // 敵の出現テーブル
+        public float EnemyPopProbability { get; set; } // 敵の出現確率
 
-        public int Number { get; }
+        public int Number { get; } // 階層番号
         
-        public int MaxTurn { get; }
+        public int MaxTurn { get; } // ターン制限
 
-        public TerrainType[,] Terrains { get; set; }
+        public TerrainType[,] Terrains { get; set; } // 地形の2次元配列
 
-        public IEnumerable<Room> Rooms => rooms;
+        public IEnumerable<Room> Rooms => rooms; // 部屋のデータを取得するためのgetプロパティ
 
-        public IEnumerable<IDungeonCharacter> Characters => characters;
+        public IEnumerable<IDungeonCharacter> Characters => characters; // キャラクターレイヤーのオブジェクトのデータを取得するためのgetプロパティ
 
-        public IEnumerable<IDungeonCharacter> Enemies => characters.Skip(1);
+        public IEnumerable<BattleCharacter> Enemies => characters.Skip(1).OfType<BattleCharacter>().ToList(); // 敵キャラクターを取得するためのgetプロパティ
 
-        public Player Player => GameManager.GetPlayer;//characters.First() as Player;
+        public Player Player => characters.First() as Player; // 主人公を取得するためのgetプロパティ
 
-        public IEnumerable<IItem> Items => items;
+        public IEnumerable<IItem> Items => items; // アイテムレイヤーのオブジェクトのデータを取得するためのgetプロパティ
 
-        public Cell this[int x, int y] => this[new Vector2Int(x,y)];
+        public Cell this[int x, int y] => this[new Vector2Int(x,y)]; // マスのデータを取得
 
-        public Cell this[Vector2Int v] => new Cell(this, v);
+        public Cell this[Vector2Int v] => new Cell(this, v); // マスのデータを取得
 
         public Floor(int number, int maxTurn, TerrainType[,] terrains, IEnumerable<Room> rooms, Player player)
         {
@@ -101,7 +104,7 @@ namespace Assets.Scripts.Dungeon
             return tmpItem;
         }
 
-        public void Kill()
+        public void Kill(IDungeonCharacter character)
         {
             
         }

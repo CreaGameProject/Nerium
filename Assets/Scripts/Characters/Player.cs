@@ -18,6 +18,9 @@ namespace Assets.Scripts.Characters
         public override string Name { get; } = "ネリウム";
         public override Force Force { get; } = Force.Player;
         
+        public int Money { get; set; }
+        public List<Item> Items { get; set; }
+
         public override bool Attacked(int power, bool isShot, BattleCharacter character = null, IItem item = null)
         {
             throw new System.NotImplementedException();
@@ -120,7 +123,7 @@ namespace Assets.Scripts.Characters
                 if (Floor[Position + Direction].Character != null)
                 {
                     var target = Floor[Position + Direction].Character;
-                    target.Attacked(Attack, false, this);
+                    target.Attacked(status.Attack, false, this);
                 }
 
                 IEnumerator ww()
