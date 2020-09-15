@@ -191,6 +191,7 @@ public class manuManager : SingletonMonoBehaviour<manuManager>
         //panelの色変更
     }
 
+    
     public void unRockFirstPanel()
     {
         selectedNum = 0;
