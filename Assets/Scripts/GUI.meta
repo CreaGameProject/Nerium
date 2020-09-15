@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<< HEAD:Assets/Prefabs.meta
 guid: 6a0f2167478b94a4985734abafb66d94
+=======
+guid: 2a3ed6b4059c73f4292c23ec5ceb1688
+>>>>>>> origin/origin/ishimaru/GUI:Assets/Scripts/GUI.meta
 folderAsset: yes
 DefaultImporter:
   externalObjects: {}
