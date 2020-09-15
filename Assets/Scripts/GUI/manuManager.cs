@@ -69,7 +69,7 @@ public class manuManager : SingletonMonoBehaviour<manuManager>
         selectAssist = 1;
         selectFlag = true;
 
-        selectArrow.transform.position = new Vector3(texts[0].transform.position.x - (textWidth / 2 + 5) - 10,
+        selectArrow.transform.position = new Vector3(texts[0].transform.position.x - (textWidth / 2 + 5) - 30,
                                                      texts[0].transform.position.y,
                                                      0);
     }
@@ -125,7 +125,7 @@ public class manuManager : SingletonMonoBehaviour<manuManager>
 
         if (Input.anyKeyDown)
         {
-            selectArrow.transform.position = new Vector3(texts[selectedNum].transform.position.x - (textWidth / 2 + 5) - 10,
+            selectArrow.transform.position = new Vector3(texts[selectedNum].transform.position.x - (textWidth / 2 + 5) - 30,
                                                     texts[selectedNum].transform.position.y,
                                                     0);
         }
