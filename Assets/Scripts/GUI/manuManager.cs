@@ -7,7 +7,7 @@ using UnityEngine;
 public class manuManager : SingletonMonoBehaviour<manuManager>
 {
 
-    
+
     /*
      * メニューの項目
      *  アイテム
@@ -21,7 +21,7 @@ public class manuManager : SingletonMonoBehaviour<manuManager>
      *  
      */
 
-
+    logManager logManager;
 
     [SerializeField] GameObject firstPanel;
     [SerializeField] GameObject[] texts;
@@ -41,7 +41,8 @@ public class manuManager : SingletonMonoBehaviour<manuManager>
 
     // Start is called before the first frame update
     void Start()
-    {    
+    {
+        logManager = logManager.Instance;
         textsSize = texts.Length;
         manuSet();
         openManu();
@@ -171,8 +172,8 @@ public class manuManager : SingletonMonoBehaviour<manuManager>
 
             case "logText":
 
-
                 //呼び出しlog
+                logManager.logOpen();
                 break;
 
             case "ritaiaText":

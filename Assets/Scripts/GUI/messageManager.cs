@@ -8,6 +8,10 @@ public class messageManager : SingletonMonoBehaviour<messageManager>
     [SerializeField] GameObject messagePanel;
     [SerializeField] Text messageText;
     string gotText;
+    logManager logManager;
+    bool textFlag = false;
+
+    //Coroutine coroutine;
 
     // Start is called before the first frame update
     void Awake()
@@ -17,13 +21,20 @@ public class messageManager : SingletonMonoBehaviour<messageManager>
 
     private void Start()
     {
+        logManager = logManager.Instance;
         messageOpen("aaaaaaaaaaaaaaaaaasssssssssssssssd");
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        if (Input.anyKeyDown && textFlag ==true)
+        {
+            textFlag = false;
+            StopCoroutine("messageWrite");
+
+            messageText.text = gotText;      
+        }
     }
 
     void messageOpen(string text)
@@ -38,15 +49,18 @@ public class messageManager : SingletonMonoBehaviour<messageManager>
 
     IEnumerator messageWrite()
     {
-        //addLog(gotText);
+        logManager.addLog(gotText);
+        textFlag = true;
 
         for (int i=0;i<gotText.Length;i++)
         {
             messageText.text += gotText.Substring(i, 1);
 
-            yield return new WaitForSeconds(0.05f);
+            yield return new WaitForSeconds(0.1f);
         }
         
-        yield return new WaitForSeconds(0.01f);
+        yield return new WaitForSeconds(0.1f);
+        textFlag = false;
+        messagePanel.GetComponent<CanvasGroup>().alpha = 0;
     }
 }
