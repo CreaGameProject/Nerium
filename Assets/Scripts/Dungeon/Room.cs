@@ -1,29 +1,32 @@
-﻿using System;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading.Tasks;
-using Assets.Scripts.Characters;
-using Assets.Scripts.Items;
+using Systems;
+using Characters;
+using Items;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-namespace Assets.Scripts.Dungeon
+namespace Dungeon
 {
-    public class Room
+    public class Room: IEnumerable<Cell>
     {
-        private Floor floor;
-        private Vector2Int startPoint;
-        private Vector2Int range;
+        public readonly Floor Floor;
+        public Vector2Int StartPoint;
+        public Vector2Int EndPoint;
+        public Vector2Int Range => EndPoint - StartPoint + Vector2Int.one;
         
-        // access to local position
-        public Room(Floor floor, Vector2Int startPoint, Vector2Int range)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="floor"></param>
+        /// <param name="startPoint"></param>
+        /// <param name="range"></param>
+        public Room(Floor floor, Vector2Int startPoint, Vector2Int endPoint)
         {
-            this.floor = floor;
-            this.startPoint = startPoint;
-            this.range = range;
+            this.Floor = floor;
+            this.StartPoint = startPoint;
+            this.EndPoint = endPoint;
         }
 
         // access to local position
@@ -31,32 +34,38 @@ namespace Assets.Scripts.Dungeon
         {
             get
             {
-                if (x < 0 || y < 0|| x > range.x || y > range.y) return null;
-                return floor[startPoint.x + x, startPoint.y + y];
+                if (x < 0 || y < 0|| x > Range.x || y > Range.y) return null;
+                return Floor[StartPoint.x + x, StartPoint.y + y];
             }
         }
 
         public Cell this[Vector2Int vec] => this[vec.x, vec.y];
 
-        public IEnumerable<IDungeonCharacter> Characters => floor.Characters.Where(x => InRange(x.Position));
+        public IEnumerable<IDungeonCharacter> Characters => Floor.Characters.Where(x => InRange(x.Position));
 
-        public IEnumerable<IItem> Items => floor.Items.Where(x=>InRange(x.Position));
+        public IEnumerable<IItem> Items => Floor.Items.Where(x=>InRange(x.Position));
 
         public bool InRange(Vector2Int position)
         {
-            position -= startPoint;
-            return position.x >= 0 &&
-                   position.y >= 0 &&
-                   position.x < range.x &&
-                   position.y < range.y;
+            return position.x >= StartPoint.x && position.x <= EndPoint.x &&
+                   position.y >= StartPoint.y && position.y <= EndPoint.y;
         }
 
         // 軽量化のため、すでにキャラクターが要る座標が選ばれた場合召喚は行わない
-        public void RandomPopEnemy(IDungeonCharacter character)
+        public void RandomPopEnemy(GameObject character)
         {
-            var cellCount = range.x * range.y;
+            var cellCount = Range.x * Range.y;
             var rand = Random.Range(0, cellCount);
-            floor.Summon(character, startPoint + new Vector2Int(rand % range.x, rand / range.x));
+            GameManager.CurrentFloor.Summon(character, StartPoint + new Vector2Int(rand % Range.x, rand / Range.x));
         }
+
+        public IEnumerator<Cell> GetEnumerator()
+        {
+            for (int i = StartPoint.x; i <= EndPoint.x; i++)
+            for (int j = StartPoint.y; j <= EndPoint.y; j++)
+                yield return Floor[i,j];
+        }
+
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
 }

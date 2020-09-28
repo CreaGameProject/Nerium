@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using Assets.Scripts.Characters;
+using Characters;
 
-namespace Assets.Scripts.Dungeon
+namespace Dungeon
 {
     /// <summary>
     /// 一階層分の情報を保持するインターフェース。これ自体が行動を起こすことはないが、様々なクラスからアクセスされるためのインターフェースを提供する。

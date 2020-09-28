@@ -1,12 +1,14 @@
-﻿using Assets.Scripts.Characters;
-using Assets.Scripts.Systems;
+﻿using Characters;
+using Systems;
+using Dungeon.Dungeons;
 using UnityEngine;
 
-namespace Assets.Scripts.Test_tmp
+namespace Test_tmp
 {
     public class Tester : MonoBehaviour
     {
-        [SerializeField] private Player player;
+        [SerializeField] private GameObject player;
+        [SerializeField] private GameObject enemy;
 
         // Start is called before the first frame update
         void Start()
@@ -17,6 +19,7 @@ namespace Assets.Scripts.Test_tmp
             var dungeon = new TestDungeon();
             
             GameManager.SetDungeon(dungeon, player);
+            GameManager.CurrentFloor.Summon(enemy, new Vector2Int(3,3));
         }
 
         // Update is called once per frame

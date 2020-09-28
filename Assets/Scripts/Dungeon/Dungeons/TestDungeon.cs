@@ -1,26 +1,26 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using Assets.Scripts.Characters;
-using Assets.Scripts.Dungeon;
-using Assets.Scripts.Systems;
+﻿using System.Collections.Generic;
+using Characters;
+using Dungeon;
+using Characters;
 using GridMap;
 using UnityEngine;
 
-public class TestDungeon : Dungeon
+namespace Dungeon.Dungeons
 {
-    public TestDungeon()
+    public class TestDungeon :Dungeon
     {
-        Name = "test dungeon";
-        MaxFloorNum = 1;
-    }
+        public override string Name => "test dungeon";
+        public override int MaxFloorNum => 1;
+        public override int ItemLimit => 20;
 
-    public override Floor MakeFloor(int floorNum, Player player)
-    {
-        var range = new Vector2Int(15, 10);
-        var terrain = new GridMap<TerrainType>(range,
-            (c, r) => c == 0 || r == 0 || c == 14 || r == 9 ? TerrainType.Wall : TerrainType.Floor).Matrix;
-        var floor = new Floor(floorNum, 500, terrain, new List<Room>(), player);
-        player.Position = new Vector2Int(1,1);
-        return floor;
+        public override Floor MakeFloor(int floorNum, Player player)
+        {
+            var floor = new Floor(1, 300, player, new Vector2Int(120, 90));
+            floor.AddRoom(2,40, 2, 40);
+            floor.AddRoom(50, 100, 5, 60);
+            floor.Terrains.SetTerrain(new Vector2Int(40, 20), new Vector2Int(50, 20), TerrainType.Floor);
+            player.Position = new Vector2Int(2,2);
+            return floor;
+        }
     }
 }

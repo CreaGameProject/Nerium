@@ -2,10 +2,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Assets.Scripts.Dungeon;
-using Assets.Scripts;
-using Assets.Scripts.Characters;
-using Assets.Scripts.Systems;
+using Dungeon;
+using Characters;
+using Systems;
+using Dungeon;
 using UnityEngine;
 
 namespace Systems
@@ -18,10 +18,12 @@ namespace Systems
         public int Turn = 0;
         private Floor floor;
         private Coroutine turnLoop;
+        public bool Enable;
 
         public TurnManager(Floor floor)
         {
             this.floor = floor;
+            Enable = true;
         }
 
         // ターンのメインループを開始
@@ -66,19 +68,20 @@ namespace Systems
                     (enemy.RequestActCategory() == ActCategory.Action ? acts : moves).Add(enemy);
                 
                 // プレイヤー・敵の移動
-                player.Move();
+                player.PlayMove();
                 foreach (var character in moves) 
-                    character.Move();
-                yield return new WaitForSeconds(Settings.StepTime);
+                    character.PlayMove();
+                yield return new WaitForSeconds(DynamicParameter.StepTime);
+                yield return new WaitUntil(()=>Enable);
 
                 // 敵の行動
                 foreach (var character in acts)
-                    yield return character.Action();
+                    yield return character.PlayAction();
             }
             else // プレイヤーが"行動"を選択した場合
             {
                 // プレイヤーの行動
-                yield return player.Action();
+                yield return player.PlayAction();
 
                 // 敵の行動カテゴリ(移動, 行動)を決定
                 foreach (var enemy in floor.Enemies)
@@ -86,12 +89,12 @@ namespace Systems
 
                 // 敵の行動
                 foreach (var character in acts)
-                    yield return character.Action();
+                    yield return character.PlayAction();
                 
                 // 敵の移動
                 foreach (var character in moves) 
-                    character.Move();;
-                yield return new WaitForSeconds(Settings.StepTime);
+                    character.PlayMove();;
+                yield return new WaitForSeconds(DynamicParameter.StepTime);
             }
             
             // ターン終了処理
@@ -99,6 +102,7 @@ namespace Systems
             foreach (var character in floor.Characters)
                 foreach (var state in character.GetStates)
                     state.TurnEnd();
+            yield return new WaitUntil(()=>Enable);
         }
     }
 }

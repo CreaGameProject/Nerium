@@ -22,11 +22,13 @@
             <e p="Cell.cs" t="Include" />
             <e p="Dungeon.cs" t="Include" />
             <e p="Dungeons" t="Include">
+              <e p="RandomDungeon.cs" t="Include" />
               <e p="TestDungeon.cs" t="Include" />
             </e>
             <e p="Floor.cs" t="Include" />
             <e p="IFloor.cs" t="Include" />
             <e p="Room.cs" t="Include" />
+            <e p="TerrainMakeUtility.cs" t="Include" />
           </e>
           <e p="Fields" t="Include">
             <e p="Field.cs" t="Include" />
@@ -39,7 +41,16 @@
             <e p="LinearAlgebra.cs" t="Include" />
             <e p="SearchAlgorithm.cs" t="Include" />
           </e>
+          <e p="GUI" t="Include">
+            <e p="HUDManager.cs" t="Include" />
+            <e p="itemManager.cs" t="Include" />
+            <e p="manuManager.cs" t="Include" />
+            <e p="messageManager.cs" t="Include" />
+            <e p="panelOpen.cs" t="Include" />
+            <e p="SingletonMonoBehaviour.cs" t="Include" />
+          </e>
           <e p="Items" t="Include">
+            <e p="DroppedItem.cs" t="Include" />
             <e p="IItem.cs" t="Include" />
             <e p="Item.cs" t="Include" />
           </e>
@@ -50,12 +61,12 @@
           <e p="Systems" t="Include">
             <e p="AttackParam.cs" t="Include" />
             <e p="CharacterCamera.cs" t="Include" />
+            <e p="DynamicParameter.cs" t="Include" />
             <e p="GameManager.cs" t="Include" />
             <e p="IDTranslator.cs" t="Include" />
             <e p="InputManager.cs" t="Include" />
             <e p="Message.cs" t="Include" />
             <e p="Navigation.cs" t="Include" />
-            <e p="Settings.cs" t="Include" />
             <e p="SingletonMonoBehaviour.cs" t="Include" />
             <e p="TurnManager.cs" t="Include" />
             <e p="Utility.cs" t="Include" />

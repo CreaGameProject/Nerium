@@ -1,15 +1,16 @@
 ﻿using System.Collections.Generic;
-using Assets.Scripts.Characters;
+using Characters;
+using GridMap;
 using UnityEngine;
 
-namespace Assets.Scripts.Dungeon
+namespace Dungeon
 {
     public abstract class Dungeon
     {
-        public string Name { get; protected set; }
-
-        public int MaxFloorNum { get; protected set; }
-
+        public abstract string Name { get; }
+        public abstract int MaxFloorNum { get; }
+        public abstract int ItemLimit { get; }
+        
         public abstract Floor MakeFloor(int floorNum, Player player);
     }
 }

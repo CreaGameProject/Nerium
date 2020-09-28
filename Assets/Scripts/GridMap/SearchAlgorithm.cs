@@ -67,7 +67,7 @@ namespace GridMap
         /// <param name="function">算出された距離に応じた値で行列を生成するための関数</param>
         public static GridMap<T> DistanceMap<T>(Vector2Int mapRange, Vector2Int basePosition, NextPoint nextPoint, DistanceMapFunction<T> function) where T : IConvertible
         {
-            var searchMatrix = new GridMap<int>(mapRange, (x, y) => -1);
+            var searchMatrix = new GridMap<int>(mapRange, v => -1);
             Queue<SearchAgent> searchAgent = new Queue<SearchAgent>(){};
             searchAgent.Enqueue(new SearchAgent() { Position = basePosition, Distance = 0 });
             searchMatrix[basePosition] = 0;
@@ -79,7 +79,7 @@ namespace GridMap
                         if (searchMatrix[vector] == -1)
                             searchAgent.Enqueue(new SearchAgent(){Position = vector, Distance = searchMatrix[vector] = current.Distance + 1});
             }
-            return new GridMap<T>(mapRange, (x,y)=>function(searchMatrix[x,y]));
+            return new GridMap<T>(mapRange, v=>function(searchMatrix[v]));
         }
         
         /// <summary>

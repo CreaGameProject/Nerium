@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using Assets.Scripts.Items;
+using Systems;
+using Characters;
+using Dungeon;
+using Items;
 using UnityEngine;
 
 public enum ItemID
@@ -11,6 +14,11 @@ public enum ItemID
 
 public abstract class Item : IItem
 {
+    public Item(Floor floor)
+    {
+        
+    }
+    
     protected Dictionary<string, Func<IEnumerator>> choices = new Dictionary<string, Func<IEnumerator>>();
     
     // アイテム欄から選択したときの選択肢を与える
@@ -27,9 +35,21 @@ public abstract class Item : IItem
     }
 
     public Vector2Int Position { get; set; }
+    public Item Derived => this;
+
     public IEnumerator SteppedBy(BattleCharacter character)
     {
-        throw new NotImplementedException();
+        if (character is Player)
+        {
+            var items = (character as Player).Items;
+            if (items.Count <= GameManager.CurrentDungeon.ItemLimit)
+            {
+                items.Add(this);
+                
+            }
+        }
+        yield break;
+        
     }
 
     public IEnumerator Hit(BattleCharacter character)

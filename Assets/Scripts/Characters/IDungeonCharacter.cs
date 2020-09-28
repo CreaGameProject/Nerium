@@ -1,11 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using Assets.Scripts.Dungeon;
-using Assets.Scripts.Items;
 using Assets.Scripts.States;
+using Dungeon;
+using Items;
 using UnityEngine;
 
-namespace Assets.Scripts.Characters
+namespace Characters
 {
     public enum Force
     {
@@ -25,11 +25,13 @@ namespace Assets.Scripts.Characters
         Vector2Int Direction { get; set; }
         Floor Floor { get; set; }
 
+        BattleCharacter Derived { get; }
+
         ActCategory RequestActCategory();
 
-        void Move();
+        void PlayMove();
 
-        IEnumerator Action();
+        IEnumerator PlayAction();
 
         bool Attacked(int power, bool isShot, BattleCharacter character = null, IItem item = null);
 

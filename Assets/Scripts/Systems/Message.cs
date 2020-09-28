@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
-using UnityEngine;
 
-namespace Assets.Scripts.Systems
+namespace Systems
 {
     public class Message : SingletonMonoBehaviour<Message>
     {

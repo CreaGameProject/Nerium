@@ -1,17 +1,11 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using Assets.Scripts.Items;
+using Systems;
 using Assets.Scripts.States;
-using Assets.Scripts.Systems;
-using UnityEditor;
+using Items;
 using UnityEngine;
-using UnityEngine.Experimental.PlayerLoop;
-using UnityEngine.Scripting;
 
-namespace Assets.Scripts.Characters
+namespace Characters
 {
     public class Player : BattleCharacter
     {
@@ -72,12 +66,12 @@ namespace Assets.Scripts.Characters
             return ActCategory.Action;
         }
         
-        public override IEnumerator Action()
+        public override IEnumerator PlayAction()
         {
             yield return ActionBuffer;
         }
 
-        public override void Move()
+        public override void PlayMove()
         {
             StartCoroutine(ActionBuffer);
         }
@@ -87,6 +81,7 @@ namespace Assets.Scripts.Characters
         {
             var shift = Input.GetKey(KeyCode.LeftShift);
             var ctrl = Input.GetKey(KeyCode.LeftControl);
+            var q = Input.GetKey(KeyCode.Q);
             var input = new Vector2Int();
             input += Input.GetKey(KeyCode.UpArrow) ? Vector2Int.up : Vector2Int.zero;
             input += Input.GetKey(KeyCode.DownArrow) ? Vector2Int.down : Vector2Int.zero;
@@ -102,10 +97,19 @@ namespace Assets.Scripts.Characters
             if (shift && (input.x == 0 || input.y == 0)) 
                 return false;
             
-            if (input != Vector2Int.zero && CanMoveTo(input))
+            if (input != Vector2Int.zero)
             {
-                ActionBuffer = Move(Settings.StepTime, input);
-                return true;
+                Direction = input;
+                if (CanMoveTo(input))
+                {
+                    if (q)
+                        DynamicParameter.StepTime = StaticSetting.RunTime;
+                    else
+                        DynamicParameter.StepTime = StaticSetting.WalkTime;
+                
+                    ActionBuffer = Move(DynamicParameter.StepTime, input);
+                    return true;
+                }
             }
 
             return false;
@@ -137,6 +141,13 @@ namespace Assets.Scripts.Characters
             }
 
             return false;
+        }
+
+        protected override IEnumerator StepOn(IItem item)
+        {
+            GameManager.TurnManager.Enable = false;
+            yield return item.SteppedBy(this);
+            GameManager.TurnManager.Enable = true;
         }
 
         private void Start()

@@ -1,10 +1,10 @@
-using System;
 using System.Collections;
-using Assets.Scripts.Items;
+using Systems;
 using Assets.Scripts.States;
-using UnityEditor;
+using Items;
+using UnityEngine;
 
-namespace Assets.Scripts.Characters.Enemies
+namespace Characters.Enemies
 {
     public class TestEnemy : Enemy
     {
@@ -15,12 +15,15 @@ namespace Assets.Scripts.Characters.Enemies
             return ActCategory.Move;
         }
 
-        public override void Move()
+        public override void PlayMove()
         {
-            
+            if(CanMoveTo(Vector2Int.right))
+                StartCoroutine(Move(DynamicParameter.StepTime, Vector2Int.right));
+            else
+                StartCoroutine(Move(DynamicParameter.StepTime, Vector2Int.left));
         }
 
-        public override IEnumerator Action()
+        public override IEnumerator PlayAction()
         {
             yield return null;
         }

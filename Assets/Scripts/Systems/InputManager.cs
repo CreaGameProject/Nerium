@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using System.Text.RegularExpressions;
 using UnityEngine;
-using UnityEngine.Experimental.PlayerLoop;
 
-namespace Assets.Scripts.Systems
+namespace Systems
 {
     /// <summary>
     /// 入力を管理するクラス。キーに対応するメソッドをEventsリストに登録することで動作する。

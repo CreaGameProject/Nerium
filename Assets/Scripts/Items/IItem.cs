@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Characters;
 using UnityEngine;
 
-namespace Assets.Scripts.Items
+namespace Items
 {
     public interface IItem
     {
@@ -14,6 +15,9 @@ namespace Assets.Scripts.Items
 
         // アイテムの座標
         Vector2Int Position { get; set; }
+        
+        // アイテムクラス
+        Item Derived { get; }
 
         // 上に乗られたとき
         IEnumerator SteppedBy(BattleCharacter character);

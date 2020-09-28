@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography.X509Certificates;
-using Assets.Scripts.Dungeon;
 using Assets.Scripts.Systems;
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -36,7 +35,11 @@ public class TilemapManager : SingletonMonoBehaviour<TilemapManager>
     }
 
     // シーン上の座標を取得する
-    public static Vector3 GetScenePosition(Vector2Int localPosition) => Instance.transform.position + new Vector3(localPosition.x, localPosition.y, 0) * CellSize;
+    public static Vector3 GetScenePosition(Vector2Int floorPosition) => Instance.transform.position + new Vector3(floorPosition.x, floorPosition.y, 0) * CellSize;
+    
+    // シーン上の座標からフロア上の座標を取得
+    public static Vector2Int GetFloorPosition(Vector3 scenePosition) =>
+        Vector2Int.RoundToInt(scenePosition - Instance.transform.position);
 
     // タイルマップを描画する
     public static void GenerateFloor(TerrainType[,] dungeonData)
@@ -44,10 +47,10 @@ public class TilemapManager : SingletonMonoBehaviour<TilemapManager>
         var range = new Vector2Int(dungeonData.GetLength(0), dungeonData.GetLength(1));
 
         var positionArray = new UnConvertibleArray<Vector3Int>(
-            new UnConvertibleMap<Vector3Int>(range, (c, r) => new Vector3Int(c, r, 0)));
+            new UnConvertibleMap<Vector3Int>(range, v => new Vector3Int(v.x, v.y, 0)));
 
         var tileArray = new UnConvertibleArray<TileBase>(
-            new UnConvertibleMap<TileBase>(range, (c, r) => tileDictionary[dungeonData[c, r]]));
+            new UnConvertibleMap<TileBase>(range, v => tileDictionary[dungeonData[v.x, v.y]]));
 
         tilemap.SetTiles(positionArray.Array, tileArray.Array);
     }

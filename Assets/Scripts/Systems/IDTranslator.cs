@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Assets.Scripts.Characters;
+﻿using Characters;
+using UnityEngine;
 
-namespace Assets.Scripts.Systems
+namespace Systems
 {
     public static class IdTranslator
     {
-        public static IDungeonCharacter GetCharacter(EnemyID id)
+        public static GameObject GetCharacter(EnemyID id)
         {
             return null;
         }

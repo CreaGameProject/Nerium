@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Assets.Scripts.Dungeon;
-using UnityEngine;
+﻿using Dungeon;
 
-namespace Assets.Scripts.Systems
+namespace Systems
 {
     public class Navigator
     {
