@@ -26,6 +26,7 @@ public class manuManager : SingletonMonoBehaviour<manuManager>
     [SerializeField] GameObject firstPanel;
     [SerializeField] GameObject[] texts;
     [SerializeField] GameObject selectArrow;
+    
 
     private int selectedNum = 0;
     private int textsSize;
@@ -79,6 +80,7 @@ public class manuManager : SingletonMonoBehaviour<manuManager>
     {
         firstPanel.GetComponent<CanvasGroup>().alpha = 0;
         selectArrow.GetComponent<CanvasGroup>().alpha = 0;
+
         selectFlag = false;
     }
 

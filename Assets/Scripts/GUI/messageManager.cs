@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System;
 
 public class messageManager : SingletonMonoBehaviour<messageManager>
 {
@@ -30,14 +31,27 @@ public class messageManager : SingletonMonoBehaviour<messageManager>
     {
         if (Input.anyKeyDown && textFlag ==true)
         {
-            textFlag = false;
+
             StopCoroutine("messageWrite");
-
-            messageText.text = gotText;      
+            messageText.text = gotText;
+            StartCoroutine("messageClose");         
         }
-    }
+        /*else if(Input.anyKeyDown){
 
-    void messageOpen(string text)
+            foreach (KeyCode code in Enum.GetValues(typeof(KeyCode)))
+            {
+                if (Input.GetKeyDown(code))
+                {
+                    Debug.Log(code.ToString());
+                    messageOpen(code.ToString()+ code.ToString()+
+                        code.ToString()+ code.ToString()+
+                        code.ToString()+ code.ToString());
+                }
+            }
+        }*/
+    }
+   
+    public void messageOpen(string text)
     {
         messagePanel.GetComponent<CanvasGroup>().alpha = 1;
         messageText.text = "";
@@ -58,9 +72,14 @@ public class messageManager : SingletonMonoBehaviour<messageManager>
 
             yield return new WaitForSeconds(0.1f);
         }
-        
-        yield return new WaitForSeconds(0.1f);
+
+        StartCoroutine("messageClose");
+    }
+
+    IEnumerator messageClose()
+    {
         textFlag = false;
+        yield return new WaitForSeconds(0.3f);
         messagePanel.GetComponent<CanvasGroup>().alpha = 0;
     }
 }
