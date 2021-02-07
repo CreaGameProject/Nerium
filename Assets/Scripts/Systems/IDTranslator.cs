@@ -1,13 +1,10 @@
-﻿using Characters;
 using UnityEngine;
 
 namespace Systems
 {
-    public static class IdTranslator
+    [CreateAssetMenu(fileName = "database", menuName = "database", order = 0)]
+    public class IdTranslator : ScriptableObject
     {
-        public static GameObject GetCharacter(EnemyID id)
-        {
-            return null;
-        }
+        
     }
 }

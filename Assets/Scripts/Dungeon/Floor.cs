@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Systems;
-using Assets.Scripts.Systems;
 using Characters;
 using Dungeon.Dungeons;
 using GridMap;
@@ -17,113 +17,52 @@ namespace Dungeon
     /// </summary>
     public class Floor
     {
-        
-#region Variables & Properties
+        // アイテム・キャラクター・地形を返す
+        public (IItem item, IDungeonCharacter character, TerrainType terrain) this[int x, int y] =>
+            (itemLayer[x,y], characterLayer[x,y], Terrains[x,y]);
+        public (IItem item, IDungeonCharacter character, TerrainType terrain) this[Vector2Int v] =>
+            (itemLayer[v.x,v.y], characterLayer[v.x,v.y], Terrains[v.x,v.y]);
 
-        /// <summary>
-        /// 階層番号
-        /// </summary>
+        /// <summary> 階層番号 </summary>
         public int Number { get; } 
         
-        /// <summary>
-        /// 最大ターン数
-        /// </summary>
+        /// <summary> 最大ターン数 </summary>
         public int MaxTurn { get; } 
 
-        /// <summary>
-        /// 敵の出現テーブル
-        /// </summary>
+        /// <summary> 敵の出現テーブル </summary>
         public Dictionary<EnemyID, float> EnemyTable { get; }
         
-        /// <summary>
-        /// 敵の出現確率
-        /// </summary>
+        /// <summary> 敵の出現確率 </summary>
         public float EnemyPopProbability { get; set; }
 
-        /// <summary>
-        /// 地形データ
-        /// </summary>
-        public GridMap<TerrainType> Terrains { get; set; }
+        /// <summary> 地形データ </summary>
+        public TerrainType[,] Terrains { get; }
 
-        /// <summary>
-        /// 部屋のリスト
-        /// </summary>
-        private readonly List<Room> rooms;
+        /// <summary> 部屋のリスト </summary>
+        public List<Room> Rooms { get; }
+        
 
-        /// <summary>
-        /// 部屋を取得するプロパティ
-        /// </summary>
-        public IEnumerable<Room> Rooms => rooms;
-        
-        /// <summary>
-        /// キャラクターレイヤーのオブジェクト
-        /// </summary>
-        private readonly List<IDungeonCharacter> characters; // 
+        private readonly ItemLayer itemLayer;
 
-        /// <summary>
-        /// キャラクターレイヤーのオブジェクトを取得するためのgetプロパティ
-        /// </summary>
-        public IEnumerable<IDungeonCharacter> Characters => characters;
+        private readonly CharacterLayer characterLayer;
         
-        /// <summary>
-        /// 敵キャラクターを取得するためのgetプロパティ
-        /// </summary>
-        public IEnumerable<BattleCharacter> Enemies => characters.Skip(1).OfType<BattleCharacter>().ToList(); 
-        
-        /// <summary>
-        /// 主人公を取得するためのgetプロパティ
-        /// </summary>
-        public Player Player => characters.First() as Player; 
-        
-        /// <summary>
-        /// アイテムレイヤーのオブジェクト
-        /// </summary>
-        private readonly List<IItem> items; // アイテムレイヤーのオブジェクト
-        
-        /// <summary>
-        /// アイテムレイヤーのオブジェクトを取得するためのgetプロパティ
-        /// </summary>
-        public IEnumerable<IItem> Items => items;
-        
-#endregion
-        
-        /// <summary>
-        /// インデクサ by int
-        /// </summary>
-        public Cell this[int x, int y] => this[new Vector2Int(x,y)]; // マスのデータを取得
-        
-        /// <summary>
-        /// インデクサ by vector
-        /// </summary>
-        public Cell this[Vector2Int v] => new Cell(this, v); // マスのデータを取得
-
-        /// <summary>
-        /// コンストラクタ
-        /// </summary>
-        /// <param name="number">階数</param>
-        /// <param name="maxTurn">最大ターン数</param>
-        /// <param name="player">プレイヤーオブジェクト</param>
-        /// <param name="size">フロアサイズ</param>
-        public Floor(int number, int maxTurn, Player player, Vector2Int size)
+        public Floor(int sizeX, int sizeY, int number, int maxTurn, GameObject player, Vector2Int playerPos)
         {
             Number = number;
             MaxTurn = maxTurn;
-            characters = new List<IDungeonCharacter>(){player};
-            items = new List<IItem>();
-            rooms = new List<Room>();
-            Terrains = new GridMap<TerrainType>(size, v => TerrainType.Wall);
+            characterLayer = new CharacterLayer(this, sizeX, sizeY);
+            itemLayer = new ItemLayer(this, sizeX, sizeY);
+            Terrains = new TerrainType[sizeX, sizeY];
+            Rooms = new List<Room>();
+            Summon(player, playerPos.x, playerPos.y);
             
             EnemyTable = new Dictionary<EnemyID, float>();
             EnemyPopProbability = 0;
         }
 
-        /// <summary>
-        /// フロアに部屋を追加する
-        /// </summary>
-        /// <param name="startX"></param>
-        /// <param name="endX"></param>
-        /// <param name="startY"></param>
-        /// <param name="endY"></param>
+        #region フロア自体の構造に対するアクション
+
+        // フロアに部屋を追加する
         public void AddRoom(int startX, int endX, int startY, int endY)
         {
             if(startX > endX) {
@@ -135,10 +74,32 @@ namespace Dungeon
             }
 
             var room = new Room(this, new Vector2Int(startX, startY), new Vector2Int(endX, endY));
-            rooms.Add(room);
-            room.SetRoomTerrain();
+            Rooms.Add(room);
+            SetTerrain(startX, endX, startY, endY, TerrainType.Floor);
         }
+        
+        // フロア内の地形を変更する
+        public void SetTerrain(int startX, int endX, int startY, int endY, TerrainType terrainType)
+        {
+            for (int i = startX; i <= endX; i++)
+            for (int j = startY; j <= endY; j++)
+                Terrains[i, j] = terrainType;
+        }
+        
+        #endregion
+        
+        
+        
+        #region フロアのオブジェクトに対するアクション
 
+        public List<IItem> Items => itemLayer.ToList();
+
+        public List<IDungeonCharacter> Characters => characterLayer.ToList();
+
+        public List<Enemy> Enemies => characterLayer.OfType<Enemy>().ToList();
+        
+        public Player Player => characterLayer.First() as Player;
+        
         public List<IDungeonCharacter> Throw(IItem item, Vector2Int basePosition, Vector2Int step,
             bool penetrable)
         {
@@ -150,61 +111,29 @@ namespace Dungeon
             return null;
         }
 
-        public bool Put(IItem item, Vector2Int position)
-        {
-            return false;
-        }
+        public bool Put(IItem item, int x, int y) => itemLayer.Put(item, x, y);
+        public IItem Pick(int x, int y) => itemLayer.Pick(x, y);
+        public bool Summon(GameObject original, int x, int y) => characterLayer.Summon(original, x, y);
+        public bool Kill(IDungeonCharacter character) => characterLayer.Kill(character);
 
-        public bool Summon(GameObject prefab, Vector2Int position)
-        {
-            // ↓インスタンシエイトどうするの？
-            // if (InRange(position))
-            // {
-            //     character.Floor = this;
-            //     characters.Add(character);
-            //     character.Position = position;
-            // }
-            if (InRange(position))
-            {
-                var obj = GameObject.Instantiate(prefab, new Vector3(position.x, position.y, 0), Quaternion.identity);
-                var cmp = obj.GetComponent<IDungeonCharacter>();
-                cmp.Floor = this;
-                characters.Add(cmp);
-            }
-            return false;
-        }
+        #endregion
+        
 
-        public IItem Pick(Vector2Int position)
-        {
-            IItem tmpItem = null;
-            foreach (var item in items)
-                if (item.Position == position)
-                {
-                    items.Remove(item);
-                    tmpItem = item;
-                }
 
-            return tmpItem;
-        }
-
-        public void Kill(IDungeonCharacter character)
+        public bool InRange(Vector2Int vec)
         {
-            
-        }
-
-        public bool InRange(Vector2Int position)
-        {
-            return Terrains.InRange(position);
+            return vec.x >= 0 && vec.y >= 0 &&
+                   vec.x < Terrains.GetLength(0) && vec.y < Terrains.GetLength(1);
         }
 
         public void PopEnemies()
         {
-            if (rooms.Count < 1) return;
+            if (Rooms.Count < 1) return;
             if (EnemyPopProbability < Random.value) return;
 
             // 召喚する部屋を求める
             Room popRoom;
-            if (rooms.Count == 1)
+            if (Rooms.Count == 1)
             {
                 // 主にフロアモンスターハウス・大部屋使用時用
                 // アルファ版で実装の予定はない
@@ -212,7 +141,7 @@ namespace Dungeon
             }
             else
             {
-                var candRooms = rooms.Where(x => !x.InRange(GameManager.GetPlayer.Position));
+                var candRooms = Rooms.Where(x => !x.InRange(GameManager.GetPlayer.Position));
                 var rand = Random.Range(0, candRooms.Count());
                 popRoom = candRooms.ElementAt(rand);
             }
@@ -224,7 +153,7 @@ namespace Dungeon
                 prob -= enemy.Value;
                 if (prob <= 0)
                 {
-                    popRoom.RandomPopEnemy(IdTranslator.GetCharacter(enemy.Key));
+                    // popRoom.RandomPopEnemy(IdTranslator.GetCharacter(enemy.Key));
                 }
             }
         }

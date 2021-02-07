@@ -13,13 +13,13 @@ namespace Systems
     public class AttackParam
     {
         public BattleCharacter Attacker;
-        public int Damage;
+        public int Power;
         public AttackAttribute Attribute;
 
-        public AttackParam(BattleCharacter attacker, int damage, AttackAttribute attribute)
+        public AttackParam(BattleCharacter attacker, int power, AttackAttribute attribute)
         {
             Attacker = attacker;
-            Damage = damage;
+            power = power;
             Attribute = attribute;
         }
     }

@@ -15,10 +15,11 @@ namespace Dungeon.Dungeons
 
         public override Floor MakeFloor(int floorNum, Player player)
         {
-            var floor = new Floor(1, 300, player, new Vector2Int(120, 90));
+            var floor = new Floor(1, 300, floorNum, 500, player.gameObject, new Vector2Int(120, 90));
             floor.AddRoom(2,40, 2, 40);
             floor.AddRoom(50, 100, 5, 60);
-            floor.Terrains.SetTerrain(new Vector2Int(40, 20), new Vector2Int(50, 20), TerrainType.Floor);
+            // floor.SetTerrain(new Vector2Int(40, 20), new Vector2Int(50, 20), TerrainType.Floor);
+            floor.SetTerrain(40, 50, 20, 20, TerrainType.Floor);
             player.Position = new Vector2Int(2,2);
             return floor;
         }

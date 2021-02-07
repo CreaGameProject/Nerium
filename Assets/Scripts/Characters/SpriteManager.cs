@@ -1,6 +1,6 @@
 ﻿using System.Collections;
 using UnityEngine;
-using Utility = Assets.Scripts.Systems.Utility;
+using Utility = Systems.Utility;
 
 namespace Characters
 {

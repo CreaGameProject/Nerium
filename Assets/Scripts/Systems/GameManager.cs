@@ -51,7 +51,7 @@ namespace Systems
                 Debug.LogError("階数が不正です。入力された階数:" + floorNum);
             }
             CurrentFloor = CurrentDungeon.MakeFloor(floorNum, GetPlayer);
-            TilemapManager.GenerateFloor(CurrentFloor.Terrains.Matrix);
+            TilemapManager.GenerateFloor(CurrentFloor.Terrains);
             Instance.turnManager = new TurnManager(CurrentFloor);
             Instance.turnManager.SetTurnLoop();
         }

@@ -1,11 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Systems;
 using Characters;
 using UnityEngine;
 
 namespace Items
 {
-    public interface IItem
+    public interface IItem: IPositional
     {
         // アイテム名
         string Name { get; }

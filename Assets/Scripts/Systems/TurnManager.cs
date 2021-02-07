@@ -68,9 +68,9 @@ namespace Systems
                     (enemy.RequestActCategory() == ActCategory.Action ? acts : moves).Add(enemy);
                 
                 // プレイヤー・敵の移動
-                player.PlayMove();
+                player.Move();
                 foreach (var character in moves) 
-                    character.PlayMove();
+                    character.Move();
                 yield return new WaitForSeconds(DynamicParameter.StepTime);
                 yield return new WaitUntil(()=>Enable);
 
@@ -93,7 +93,7 @@ namespace Systems
                 
                 // 敵の移動
                 foreach (var character in moves) 
-                    character.PlayMove();;
+                    character.Move();;
                 yield return new WaitForSeconds(DynamicParameter.StepTime);
             }
             

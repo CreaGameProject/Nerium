@@ -15,7 +15,7 @@ namespace Characters
         public int Money { get; set; }
         public List<Item> Items { get; set; }
 
-        public override bool Attacked(int power, bool isShot, BattleCharacter character = null, IItem item = null)
+        public override bool Attacked(AttackParam attack)
         {
             throw new System.NotImplementedException();
         }
@@ -25,12 +25,12 @@ namespace Characters
             throw new System.NotImplementedException();
         }
 
-        public override bool AddState(State state)
+        public override bool AddCondition(State state)
         {
             throw new System.NotImplementedException();
         }
 
-        public override bool HealStates(params StateID[] states)
+        public override bool HealCondition(params State[] states)
         {
             throw new System.NotImplementedException();
         }
@@ -66,12 +66,12 @@ namespace Characters
             return ActCategory.Action;
         }
         
-        public override IEnumerator PlayAction()
+        public override IEnumerator Action()
         {
             yield return ActionBuffer;
         }
 
-        public override void PlayMove()
+        public override void Move()
         {
             StartCoroutine(ActionBuffer);
         }
@@ -124,10 +124,10 @@ namespace Characters
             {
                 
                 Debug.Log(Floor);
-                if (Floor[Position + Direction].Character != null)
+                if (Floor[Position + Direction].character != null)
                 {
-                    var target = Floor[Position + Direction].Character;
-                    target.Attacked(status.Attack, false, this);
+                    var target = Floor[Position + Direction].character;
+                    target.Attacked(new AttackParam(this, Attack.Value, AttackAttribute.Blow));
                 }
 
                 IEnumerator ww()

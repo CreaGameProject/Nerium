@@ -1,0 +1,61 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Dungeon.Floor">
+    <Position X="3" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgAAAAAAQEAACACACEAEBAACAEGAAAEAAYAAAYAIAAg=</HashCode>
+      <FileName>Assets\Scripts\Dungeon\Floor.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Characters.BattleCharacter">
+    <Position X="5.5" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAABAEIKAEaAggBCgECAQAAAAAAgAAAAAAAAAKQAQ=</HashCode>
+      <FileName>Assets\Scripts\Characters\BattleCharacter.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Characters.Enemy">
+    <Position X="7.5" Y="7.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAACAAAAAAAAgAAAAAAAIAAAAAAAAACAAAAAAAAIAAI=</HashCode>
+      <FileName>Assets\Scripts\Characters\Enemy.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Characters.Player">
+    <Position X="10" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAQAAAAAKAASAAAAAAEDAQEAABAAAAQAAAAAAAKAAQ=</HashCode>
+      <FileName>Assets\Scripts\Characters\Player.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ClassA">
+    <Position X="0.75" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAQAAAAA=</HashCode>
+      <FileName>ClassA.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ClassB">
+    <Position X="1.25" Y="9" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ClassB.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Enum Name="Characters.MovingAbility" Collapsed="true">
+    <Position X="12" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAEAAAAAAAAAAAAAAAAAAAACAAAAAAAAAgAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Characters\BattleCharacter.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Characters.EnemyID" Collapsed="true">
+    <Position X="10" Y="7.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Characters\Enemy.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Yu Gothic UI" Size="9" />
+</ClassDiagram>

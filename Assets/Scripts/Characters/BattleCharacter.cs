@@ -5,11 +5,11 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using Systems;
 using Assets.Scripts.States;
-using Assets.Scripts.Systems;
 using Dungeon;
 using Items;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using static Systems.AttackAttribute;
 using Random = UnityEngine.Random;
 
 namespace Characters
@@ -19,34 +19,34 @@ namespace Characters
         Walkable, Corner, UnWalkable
     }
 
-
     /// <summary>
     /// シーンのダンジョン内で動く、戦えるキャラクターのクラス。
     /// </summary>
     public abstract class BattleCharacter : MonoBehaviour, IDungeonCharacter
     {
+        #region シリアライズ
+
+        [SerializeField] private Status status;
+
+        #endregion
+
         private Vector2Int direction = Vector2Int.down;
+        private Movement movement;
+        private ConditionEffector conditionEffector;
+        private Brain brain;
 
         public abstract string Name { get; }
         public abstract Force Force { get; }
 
-        public BattleCharacter Derived => this;
-
         public Vector2Int Position
         {
-            get
-            {
-                if (gameObject != null) {
-                    return TilemapManager.GetFloorPosition(transform.position);
-                }
-                return new Vector2Int(0, 0);
-            }
+            get => gameObject != null 
+                ? TilemapManager.GetFloorPosition(transform.position) 
+                : new Vector2Int(0, 0);
             set
             {
-                if (gameObject != null)
-                {
+                if (gameObject != null) 
                     transform.position = TilemapManager.GetScenePosition(value);
-                }
             }
         }
 
@@ -69,46 +69,89 @@ namespace Characters
 
         public Floor Floor { get; set; }
 
-
-        public virtual bool Attacked(int power, bool isShot, BattleCharacter character = null, IItem item = null)
+        #region ステータス
+        public int Hp
         {
-            if (Random.value > 0.9)
-                return false;
-            status.Hp = Mathf.Max(0, status.Hp - (power - status.Defense));
-            if(status.Hp == 0)
+            get => hp <= MaxHp.Value ? hp : MaxHp.Value;
+            set
+            {                
+                hp = Mathf.Clamp(value, 0, MaxHp.Value);
+                // 0の場合死亡処理
                 Floor.Kill(this);
-            return true;
+            }
         }
-        public abstract bool Healed(int power, BattleCharacter character = null, IItem item = null);
-        public abstract bool AddState(State state);
+        
+        public StatusParameter MaxHp { get; private set; }
 
-        public abstract bool HealStates(params StateID[] states);
-
-        protected Status status;
-        public Status Status => status;
-
-        public IEnumerable<State> GetStates => States;
-
-        protected List<State> States = new List<State>();
-
-        public virtual MovingAbility GetMovingAbility(TerrainType terrain)
+        public Status Status
         {
-            switch (terrain)
+            get => default;
+            set
             {
-                case TerrainType.Floor:
-                    return MovingAbility.Walkable;
-                case TerrainType.WaterWay:
-                    return MovingAbility.Corner;
-                default:
-                    return MovingAbility.UnWalkable;
             }
         }
 
+        public ConditionEffector ConditionEffector
+        {
+            get => default;
+            set
+            {
+            }
+        }
+
+        public Movement Movement
+        {
+            get => default;
+            set
+            {
+            }
+        }
+
+        public Brain Brain
+        {
+            get => default;
+            set
+            {
+            }
+        }
+
+        #endregion
+
+        #region 受動
+
+        public virtual bool Attacked(AttackParam attack)
+        {
+            switch (attack.Attribute)
+            {
+                case Blow:
+                    Hp -= attack.Power - Defense.Value;
+                    break;
+                case Shot:
+                    Hp -= attack.Power - Resist.Value;
+                    break;
+                case Other:
+                    Hp -= attack.Power;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            return true;
+        }
+        
+        public abstract bool Healed(int power, BattleCharacter character = null, IItem item = null);
+        public abstract bool AddCondition(State state);
+
+        public abstract bool HealCondition(params ConditionID condition);
+        
+        #endregion
+
+
         public abstract ActCategory RequestActCategory();
 
-        public abstract void PlayMove();
+        public abstract void Move();
 
-        public abstract IEnumerator PlayAction();
+        public abstract IEnumerator Action();
 
         /// <summary>
         /// キャラクターをしていした座標にワープさせる
@@ -116,10 +159,10 @@ namespace Characters
         /// </summary>
         /// <param name="destination"></param>
         /// <returns></returns>
-        public bool Warp(Vector2Int destination)
+        public bool SetPosition(Vector2Int destination)
         {
             var cell = GameManager.CurrentFloor[destination];
-            if (GetMovingAbility(cell.TerrainType) == MovingAbility.Walkable && cell.Character == null)
+            if (GetMovingAbility(cell.terrain) == MovingAbility.Walkable && cell.character == null)
             {
                 Position = destination;
                 return true;
@@ -129,96 +172,45 @@ namespace Characters
         }
 
 
-        /// <summary>
-        /// 一マス隣の座標に移動可能であるかを判定する
-        /// </summary>
-        /// <param name="to"></param>
-        /// <returns></returns>
-        public bool CanMoveTo(Vector2Int to) => CanMoveTo(to, Position);
 
 
-        /// <summary>
-        /// 一マス隣の座標に移動可能であるかを判定する
-        /// </summary>
-        /// <param name="to"></param>
-        /// <param name="from"></param>
-        /// <returns></returns>
-        public bool CanMoveTo(Vector2Int to, Vector2Int from)
-        {
-            // directionが2マス以上の移動の場合false
-            if (Mathf.Abs(to.x) > 1 || Mathf.Abs(to.y) > 1)
-            {
-                return false;
-            }
-            // 判定マスがフロア範囲外の場合false
-            if (!GameManager.CurrentFloor.InRange(Position + to))
-            {
-                return false;
-            }
-            var nextCell = GameManager.CurrentFloor[Position + to];
-            // 判定マスが壁であるor判定マスにキャラが存在する場合false
-        
-            if (GetMovingAbility(nextCell.TerrainType) != MovingAbility.Walkable || nextCell.Character != null)
-            {
-                return false;
-            }
-            // 斜め移動かつコーナーが移動不可マスの場合false
-            if (to.magnitude > 1)
-            {
-                var corner = to;
-                corner.x = 0;
-                if (GetMovingAbility(GameManager.CurrentFloor[Position + corner].TerrainType) == MovingAbility.UnWalkable)
-                {
-                    return false;
-                }
+        // /// <summary>
+        // /// 指定したパスで移動する。移動距離にかかわらず移動時間は一定。
+        // /// </summary>
+        // /// <param name="moveTime"></param>
+        // /// <param name="paths"></param>
+        // /// <returns></returns>
+        // protected IEnumerator Move(float moveTime, params Vector2Int[] paths)
+        // {
+        //     var stepTime = moveTime / paths.Length;
+        //     foreach (var step in paths)
+        //     {
+        //         Direction = step;
+        //         var beforeStep = TilemapManager.GetScenePosition(Position);
+        //         var afterStep = TilemapManager.GetScenePosition(Position + step);
+        //         for (float t = 0; t < stepTime; t += Time.deltaTime)
+        //         {
+        //             transform.position = Vector3.Lerp(beforeStep, afterStep, t / stepTime);
+        //             yield return null;
+        //         }
+        //
+        //         var item = Floor[Position].item;
+        //         if(item != null)
+        //             StartCoroutine(StepOn(item));
+        //         Position = Position;
+        //     }
+        // }
 
-                corner = to;
-                corner.y = 0;
-                if (GetMovingAbility(GameManager.CurrentFloor[Position + corner].TerrainType) == MovingAbility.UnWalkable)
-                {
-                    return false;
-                }
-            }
-
-            return true;
-        }
-
-
-        /// <summary>
-        /// 指定したパスで移動する。移動距離にかかわらず移動時間は一定。
-        /// </summary>
-        /// <param name="moveTime"></param>
-        /// <param name="paths"></param>
-        /// <returns></returns>
-        protected IEnumerator Move(float moveTime, params Vector2Int[] paths)
-        {
-            var stepTime = moveTime / paths.Length;
-            foreach (var step in paths)
-            {
-                Direction = step;
-                var beforeStep = TilemapManager.GetScenePosition(Position);
-                var afterStep = TilemapManager.GetScenePosition(Position + step);
-                for (float t = 0; t < stepTime; t += Time.deltaTime)
-                {
-                    transform.position = Vector3.Lerp(beforeStep, afterStep, t / stepTime);
-                    yield return null;
-                }
-
-                var item = Floor[Position].Item;
-                if(item != null)
-                    StartCoroutine(StepOn(item));
-                Position = Position;
-            }
-        }
-
-        protected virtual IEnumerator StepOn(IItem item)
-        {
-            yield break;
-        }
 
         private void Start()
         {
             Floor = GameManager.CurrentFloor;
+            MaxHp = new StatusParameter(status.hp);
+            Attack = new StatusParameter(status.attack);
+            Defense = new StatusParameter(status.defense);
+            Dexterity = new StatusParameter(status.dexterity);
+            Resist = new StatusParameter(status.resist);
+            hp = MaxHp.Value;
         }
     }
 }

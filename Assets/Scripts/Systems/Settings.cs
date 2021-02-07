@@ -13,5 +13,7 @@
     {
         public static float WalkTime => 0.15f;
         public static float RunTime => 0.02f;
+
+        public static int ItemDisapearDistance => 4;
     }
 }

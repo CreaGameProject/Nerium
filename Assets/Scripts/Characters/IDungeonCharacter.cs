@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Systems;
 using Assets.Scripts.States;
 using Dungeon;
 using Items;
@@ -17,30 +18,26 @@ namespace Characters
         Move, Action
     }
 
-    public interface IDungeonCharacter
+    public interface IDungeonCharacter: IPositional
     {
         string Name { get; }
         Force Force { get; }
-        Vector2Int Position { get; set; }
         Vector2Int Direction { get; set; }
-        Floor Floor { get; set; }
-
-        BattleCharacter Derived { get; }
+        IEnumerable<Condition> Conditions { get; set; }
+        Status Status { get; set; }
+        Status OriginStatus { get; set; }
 
         ActCategory RequestActCategory();
 
-        void PlayMove();
+        void Move();
+        void Action();
 
-        IEnumerator PlayAction();
-
-        bool Attacked(int power, bool isShot, BattleCharacter character = null, IItem item = null);
+        bool Attacked(AttackParam attack);
 
         bool Healed(int power, BattleCharacter character = null, IItem item = null);
 
-        bool AddState(State state);
+        bool AddCondition(Condition condition);
 
-        IEnumerable<State> GetStates { get; }
-
-        bool HealStates(params StateID[] states);
+        bool HealCondition(params ConditionID[] condition);
     }
 }

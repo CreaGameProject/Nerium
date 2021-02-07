@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography.X509Certificates;
-using Assets.Scripts.Systems;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using GridMap;
@@ -12,7 +11,7 @@ using UnityEngine.Assertions.Comparers;
 
 public enum TerrainType
 {
-    Floor, WaterWay, Wall
+    Wall, Floor, WaterWay 
 }
 
 public class TilemapManager : SingletonMonoBehaviour<TilemapManager>

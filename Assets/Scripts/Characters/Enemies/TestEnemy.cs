@@ -15,7 +15,7 @@ namespace Characters.Enemies
             return ActCategory.Move;
         }
 
-        public override void PlayMove()
+        public override void Move()
         {
             if(CanMoveTo(Vector2Int.right))
                 StartCoroutine(Move(DynamicParameter.StepTime, Vector2Int.right));
@@ -23,7 +23,7 @@ namespace Characters.Enemies
                 StartCoroutine(Move(DynamicParameter.StepTime, Vector2Int.left));
         }
 
-        public override IEnumerator PlayAction()
+        public override IEnumerator Action()
         {
             yield return null;
         }
@@ -38,12 +38,12 @@ namespace Characters.Enemies
             throw new System.NotImplementedException();
         }
 
-        public override bool AddState(State state)
+        public override bool AddCondition(State state)
         {
             throw new System.NotImplementedException();
         }
 
-        public override bool HealStates(params StateID[] states)
+        public override bool HealCondition(params State[] states)
         {
             throw new System.NotImplementedException();
         }
